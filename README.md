@@ -1,2 +1,3 @@
 # STS2300-Fall2023
-This repository will include code from class
+
+I will update this page throughout the semester with code from class, datasets, solutions for activities, and more.
