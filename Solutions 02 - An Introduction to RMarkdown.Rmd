@@ -1,0 +1,165 @@
+---
+title: "Activity 02 - An Introduction to RMarkdown (Solutions)"
+author: "STS 2300 (Dr. VanKrevelen)"
+date: 'Updated: 8/20/2023'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This file is an R Markdown file (ending in .Rmd). Unlike a regular R script (ending in .R), we can mix text, code, and output in the same file. This means that we can run code in the same place where we discuss our results. There are even ways to make it so that our text automatically changes when we change our code. This could be useful for a company who wants a monthly report to update automatically with small changes to data/code.
+
+The process of creating the document that combines text, code, and output is called "Knitting." Try hitting the dropdown arrow on the button above that says Knit. For now, let's choose "Knit to HTML".
+
+1. Where does the Knitted document show up?
+
+**Answer:** It pops up a separate window in R Studio that contains my document.
+
+**Note:** You can change this by going to Tools --> Global Options --> R Markdown. Then change "Show output preview in" to Viewer.
+
+<br>
+
+
+2. R Markdown files also allow you to format some of your text. For example, what happens when I put words between *one* or **two** asterisks?
+
+**Answer:** Put words in between one pair of asterisks to italicize them or two pairs to bold them.
+
+<br>
+
+
+3. Let's take a look at adding code to our document. Notice how the section below this question has a gray background. This is an R **code chunk**. We can type code in this section and R will run it sequentially as it knits our document. Write code for one of the numeric summaries from Notes 2 in this section. In the text section below the code, write what is displayed when you knit the document.
+
+```{r}
+library(moderndive)
+
+table(MA_schools$size)
+```
+
+**Answer:** My code shows up in the gray box and the output of that code shows up in a white box below it.
+
+<br>
+
+
+4. Let's use the code chunk below to load the `dplyr` package. Notice that we get some messages along with our code. We probably wouldn't want these in a formal document. At the top of the code chunk there is `{r}`. We can change settings here to control what gets displayed and / or run along with this code chunk. Try changing it to read `{r, message = FALSE}`, then knitting the document again. What happens when we do that?
+
+```{r, message = FALSE}
+library(dplyr)
+```
+
+**Answer:** When I add message = FALSE, it removes the messages from the knitted document.
+
+<br>
+
+
+5. Let's continue to explore ways to use .Rmd files. Write code in the code chunk below to display the first 5 observations from the `mtcars` data (Hint: We did this in Notes 1). After you add your code, hit the little green triangle on the right side of the code chunk. What happens?
+
+```{r}
+head(mtcars, n = 5)
+```
+
+**Answer:** It runs the code in the code chunk and displays the output directly in my .Rmd file (instead of reknitting the whole document).
+
+<br>
+
+
+6. We already saw how we could use `message = FALSE` to remove messages when we run a code chunk. Try adding `echo = FALSE` on your table above, then knit the document and write down what it does. Next, replace that with `eval = FALSE`, then knit the document and write down what it does.
+
+**Answer about echo:** < REPLACE THIS WITH YOUR ANSWER ABOUT echo = FALSE >
+
+**Answer about eval:** < REPLACE THIS WITH YOUR ANSWER ABOUT eval = FALSE >
+
+<br>
+
+
+7. Let's try an example to see how we might use R Markdown to generate reports that update automatically. Suppose I want to be able to summarize schools of different sizes each in their own document.
+
+We are going to revisit the `MA_schools` data from the `moderndive` pacakge. Below is some code to generate the mean and median average SAT scores for small schools. It creates an object called `school_size` and another called `school_summary`. (Note: The `%>%` symbol is something we will learn about in Notes 3. For now, don't worry about exactly what the code is doing.)
+
+```{r}
+library(moderndive)
+school_size <- "small"
+
+school_summary <- MA_schools %>%
+  filter(size == school_size) %>%
+  summarize(MeanSAT = mean(average_sat_math), 
+            MedSAT = median(average_sat_math)) %>%
+  round(digits = 0)
+```
+
+Now in my text, I can tell someone that the mean average SAT score of `r school_size` schools is `r school_summary$MeanSAT` and the median is `r school_summary$MedSAT`. 
+
+These numbers will change if you just change the value I assign to `school_size` above. Try it out for medium and large schools. Knit the document after you make each change. How am I telling R to include values from R objects directly in the text section of my document?
+
+**Answer:** < MAKE NOTE OF HOW I CALLED R OUTPUT IN THE TEXT >
+
+<br>
+
+
+8. What should I do if I wanted to display my analysis but not my code for the example above?
+
+**Answer:** < PUT YOUR ANSWER HERE >
+
+<br>
+
+
+9. It can be hard to memorize everything we can do with .RMD files. There are a collection of [RStudio cheatsheets at this link](https://www.rstudio.com/resources/cheatsheets/). These can be really useful documents. For example, the RMarkdown one helped me remember how to add a link to my document! Go to this link, find the RMarkdown cheatsheet, and pick a few of the features in the "Write With RMarkdown" section on the right of the page to experiment with below. Re-knit your document after to see if they worked!
+
+< TEST YOUR NEW FEATURES IN THIS SPACE >
+
+<br>
+
+
+10. You may have noticed that when we print data frames, it doesn't always look that great in the knitted file. One option is to use the `kableExtra` package. You can find examples of new table formats [here](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html). I've loaded the `kableExtra` package and used the classic theme below. Try printing the same table using one or two of the other themes from the link above. You may also want to try out some of the options within the theme function(s) you choose.
+
+**Note**: I set this chunk to `eval = FALSE` so the document would knit. Once you install `kableExtra`, you can remove that argument.
+
+```{r, eval = FALSE}
+library(kableExtra)
+
+kbl(head(mtcars, 5)) %>%
+  kable_classic()
+```
+
+<br>
+
+
+11. Another option to make nice tables is the `tabyl` function from the `janitor` package. Below are a couple of examples. You can see more [here](https://cran.r-project.org/web/packages/janitor/vignettes/tabyls.html).
+
+**Note**: I set this chunk to `eval = FALSE` so the document would knit. Once you install `janitor`, you can remove that argument.
+
+```{r, eval = FALSE}
+library(janitor)
+
+# One variable - produces count and percent
+tabyl(mtcars, am)
+
+# One variable with total added and percents reformatted
+tabyl(mtcars, am) %>%
+  adorn_totals("row") %>%
+  adorn_pct_formatting()
+
+# Two variables - produces count
+tabyl(mtcars, am, cyl)
+
+# Two variables with percentages, counts in parentheses
+tabyl(mtcars, am, cyl) %>%
+  adorn_percentages("all") %>%
+  adorn_pct_formatting() %>%
+  adorn_ns()
+```
+
+Try re-creating one or two of the tables you've previously made with some of the formatting options above. (Note: You could also use `kableExtra` functions on these tables when you are done.)
+
+```{r}
+
+```
+
+<br>
+
+
+12. Lastly, if you have Microsoft Word, you can Knit to Word to create a Word document. This is what I have been doing for the notes and activities in our class. Sometimes the formatting gets messed up a little, but you can then change it in Word if you need to. You can also Knit documents to pdf (what I prefer for a nice looking and easy to share file), but it requires you to have a separate program installed. See [here](https://yihui.org/tinytex/) for more info if you're interested.
