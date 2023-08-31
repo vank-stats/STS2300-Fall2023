@@ -4,8 +4,8 @@ author: "STS 2300 (Dr. VanKrevelen)"
 date: 'Updated: 8/20/2023'
 output:
   html_document: default
-  pdf_document: default
   word_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -51,7 +51,7 @@ table(MA_schools$size)
 library(dplyr)
 ```
 
-**Answer:** When I add message = FALSE, it removes the messages from the knitted document.
+**Answer:** When I add message = FALSE, it removes the messages from the knitted document. If you have a warning that still shows up, try adding another comma and then `warning = FALSE`.
 
 <br>
 
@@ -69,9 +69,18 @@ head(mtcars, n = 5)
 
 6. We already saw how we could use `message = FALSE` to remove messages when we run a code chunk. Try adding `echo = FALSE` on your table above, then knit the document and write down what it does. Next, replace that with `eval = FALSE`, then knit the document and write down what it does.
 
-**Answer about echo:** < REPLACE THIS WITH YOUR ANSWER ABOUT echo = FALSE >
+**Answer about echo:** The echo argument controls whether our code shows up in the knitted file. We use FALSE if we don't want the code to show up.
 
-**Answer about eval:** < REPLACE THIS WITH YOUR ANSWER ABOUT eval = FALSE >
+**Answer about eval:** The eval argument controls whether to run our code. We use FALSE to not run it, so then no output shows up. (Note: This is useful if you want to demonstrate an error, or if you have one you can't get rid of, but you still want someone to see your code.)
+
+
+```{r, eval = FALSE}
+# If you have an error in your code, eval = FALSE will make it so the document 
+# still knits.
+
+Head(mtcars, n = 5)
+```
+
 
 <br>
 
@@ -82,7 +91,7 @@ We are going to revisit the `MA_schools` data from the `moderndive` pacakge. Bel
 
 ```{r}
 library(moderndive)
-school_size <- "small"
+school_size <- "large"
 
 school_summary <- MA_schools %>%
   filter(size == school_size) %>%
@@ -95,21 +104,31 @@ Now in my text, I can tell someone that the mean average SAT score of `r school_
 
 These numbers will change if you just change the value I assign to `school_size` above. Try it out for medium and large schools. Knit the document after you make each change. How am I telling R to include values from R objects directly in the text section of my document?
 
-**Answer:** < MAKE NOTE OF HOW I CALLED R OUTPUT IN THE TEXT >
+**Answer:** To reference R code and to call R objects I put two tick marks with the letter r in between them at the start followed by my R code. This can work for any R code, so I could calculate the mean of three numbers directly in my text as `r mean(c(1, 60, 24))`. We call this **in-line R code**. If you wanted a longer code chunk to be referenced but not to show up in your document, you can use `include = FALSE` for the code chunk. This will let it run the code but not show the code or output.
 
 <br>
 
 
 8. What should I do if I wanted to display my analysis but not my code for the example above?
 
-**Answer:** < PUT YOUR ANSWER HERE >
+**Answer:** I can use `echo = FALSE` for my code chunk. 
 
 <br>
 
 
 9. It can be hard to memorize everything we can do with .RMD files. There are a collection of [RStudio cheatsheets at this link](https://www.rstudio.com/resources/cheatsheets/). These can be really useful documents. For example, the RMarkdown one helped me remember how to add a link to my document! Go to this link, find the RMarkdown cheatsheet, and pick a few of the features in the "Write With RMarkdown" section on the right of the page to experiment with below. Re-knit your document after to see if they worked!
 
-< TEST YOUR NEW FEATURES IN THIS SPACE >
+**Here are a small handful of examples**
+
+# Big headers
+
+## Slightly smaller headers
+
+##### Really small headers
+
+[Link to Elon's website](https://www.elon.edu/)
+
+![](https://marvel-b1-cdn.bc0a.com/f00000000297652/www.elon.edu/u/university-communications/wp-content/uploads/sites/137/2018/07/download-primary-standard.png)
 
 <br>
 
@@ -118,7 +137,7 @@ These numbers will change if you just change the value I assign to `school_size`
 
 **Note**: I set this chunk to `eval = FALSE` so the document would knit. Once you install `kableExtra`, you can remove that argument.
 
-```{r, eval = FALSE}
+```{r, warning = FALSE, message = FALSE}
 library(kableExtra)
 
 kbl(head(mtcars, 5)) %>%
@@ -132,7 +151,7 @@ kbl(head(mtcars, 5)) %>%
 
 **Note**: I set this chunk to `eval = FALSE` so the document would knit. Once you install `janitor`, you can remove that argument.
 
-```{r, eval = FALSE}
+```{r, message = FALSE}
 library(janitor)
 
 # One variable - produces count and percent
