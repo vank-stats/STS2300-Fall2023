@@ -75,7 +75,7 @@ alam_watchout <- bridges %>%
   filter(COUNTY == "ALAMANCE",
          STRUCTURALLYDEFICIENT == "SD" | FUNCTIONALLYOBSOLETE == "FO")
 
-alam_watchout <- filter(alamance, 
+alam_watchout <- filter(alam_bridges, 
                   STRUCTURALLYDEFICIENT == "SD" | FUNCTIONALLYOBSOLETE == "FO")
 
 table(alam_watchout$COUNTY)
@@ -86,3 +86,30 @@ table(alam_watchout$STRUCTURALLYDEFICIENT, alam_watchout$FUNCTIONALLYOBSOLETE)
 # Practice with select()
 
 alam_bridges <- select(alam_bridges, ROUTE, ACROSS, YEARBUILT, SR)
+
+
+
+
+
+# Practice with mutate()
+
+mycars <- mutate(mtcars, wt_lbs = wt * 1000)
+
+mycars %>%
+  select(wt, wt_lbs) %>%
+  head(n = 5)
+
+# Create AGE variable (2023 - YEARBUILT). Print just AGE/YEARBUILT for last 10.
+
+bridges <- mutate(bridges, AGE = 2023 - YEARBUILT)
+
+# Option 1
+
+bridges %>%
+  select(AGE, YEARBUILT) %>%
+  tail(n = 10)
+
+# Option 2
+
+select(bridges, AGE, YEARBUILT) %>%
+  tail(n = 10)
