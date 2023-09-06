@@ -1,0 +1,155 @@
+---
+title: "Homework 1"
+author: "Solutions"
+date: 'Due: 9/4/2023'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Use the code chunk below to load any R libraries that you use in your script. I've added `dplyr` as a start.
+
+```{r, message = FALSE, warning = FALSE}
+library(dplyr)
+library(moderndive)
+library(kableExtra)
+```
+
+
+
+1. (4 points) Install the `moderndive` package on your computer if you haven't done so yet. Then add code above to load the package in this document. Explain below why we do not want to include the code to install the package in this document.
+
+**Answer:** We only need to install the package once. If we included code to install the package in this document, it would be installed every time we knitted our file.
+
+<br>
+
+
+
+2. (5 points) Write code below to bring up the help menu for the `coffee_ratings` data set from the `moderndive` package. Then tell me how many observations are in the data and give an example of two variables.
+
+```{r}
+# Put your code below to bring up the help menu
+
+?coffee_ratings
+```
+
+**Answer:** The data has 1,340 observations that represent samples of coffee. Variables include things like country of origin and altitude at which it was grown (among many others).
+
+<br>
+
+
+
+3. (4 points) Use a function (or functions) of your choice to see how R is storing the variables in this data. Identify at least two variables that you would expect to be quantitative but are being stored as character variables.
+
+```{r, eval = FALSE}
+# Put your code below to explore the data
+
+str(coffee_ratings) # output hidden since it is VERY long
+```
+
+**Answer:** Possible examples are altitude, bag_weight, and harvest_year. Each of these are quantitative variables, but we would not be able to do numeric calculations for them as they are currently stored in the data frame.
+
+**Note:** It doesn't look very good to have this long amount of output in the document. Usually, I would use a function like `str()` outside of my .Rmd file and then use what I learn to guide my approach to working with the data within the document.
+
+<br>
+
+
+
+4. (7 points) Write code below to create an object called `coffee_sample` that includes only the first 20 rows in the `coffee_ratings` data. Then add code that displays just the country of origin for the 20 observations in your new object. Lastly, in your answer below, write a sentence that includes in-line R code to tell the reader what the median flavor score is of the 20 coffee samples.
+
+```{r}
+# Put your code below
+
+coffee_sample <- head(coffee_ratings, n = 20)
+coffee_sample$country_of_origin
+```
+
+**Answer:** In my 20 coffee samples, the median flavor score is `r median(coffee_sample$flavor)`.
+
+<br>
+
+
+
+5. (6 points) Using the full `coffee_ratings` data again, make one table displaying the number of coffees of each color and another displaying the proportion of the coffees that are each color. Is every coffee sample in the data set included in this table? How do you know?
+
+```{r}
+# Put your code below
+
+table(coffee_ratings$color)
+prop.table(table(coffee_ratings$color))
+```
+
+**Answer:** No. There are supposed to be over 1,300 coffee samples, but my table only includes around 1,100 observations with color values.
+
+<br>
+
+
+6. (6 points) The `table()` function has an argument called `useNA` that can take on three possible values: `c("no", "ifany", "always")`. Update your code for both tables from the previous question to include `NA` values in your tables. Many functions have what we call **default values** for arguments. These are values that are used if the user doesn't specify anything for that argument. What do you think the default value is for `useNA` and why?
+
+```{r}
+# Put your code below
+table(coffee_ratings$color, useNA = "ifany")
+prop.table(table(coffee_ratings$color, useNA = "ifany"))
+```
+
+**Answer:** Because my original tables didn't include a category for NA, the `useNA` default value must be `"no"`.
+
+<br>
+
+
+
+7. (6 points) Create a data frame called `coffee_summary` containing the following for each country of origin (in other words you will have a row for each country):
+
+  - maximum `total_cup_points` (call this `max_points`)
+  - minimum `acidity` (call this `min_acid`)
+  - mean `moisture` (call this `avg_moisture`)
+  - standard deviation `aroma` (call this `sd_aroma`)
+
+```{r}
+# Put your code below
+
+coffee_summary <- summarize(coffee_ratings,
+                            max_points = max(total_cup_points),
+                            min_acid = min(acidity),
+                            avg_moisture = mean(moisture),
+                            sd_aroma = sd(aroma, na.rm = TRUE),
+                            .by = country_of_origin)
+```
+
+<br>
+
+
+8. (7 points) Take your `coffee_summary` object from above and display it below using the `kableExtra` package to format it nicely for this document. Add an option to this code chunk so that your code is **not** displayed in the knitted document. (Note: You should add code at the top of the document to load `kableExtra` where other packages are loaded.)
+
+```{r, echo = FALSE}
+# Put your code below - I've added extra options to improve readability
+
+kbl(coffee_summary) %>%
+  kable_material_dark("striped", full_width = FALSE)
+```
+
+**Note**: You may have some NA values in your table. In R, numeric calculations that include NAs in them produce NA as the result. Many functions have options to remove NAs from the calculations. You may want to try adding `na.rm = TRUE` as an argument to your function that produced NA values to see if it fixes this issue.
+
+<br>
+
+
+9. (3 points) Create a vector called `beverages` that lists four different beverages in it.
+
+```{r}
+# Put your code below
+
+beverages <- c("water", "tea", "coke", "juice")
+```
+
+<br>
+
+
+10. (2 points) Reflection: Answer one (or both) of the following questions. Your answer should be at least 3 - 4 sentences long and demonstrate some level of reflection (i.e. not just a few words).
+
+  - What's something from Notes 1 - 2 that isn't entirely clear to you and what do you think would help to solidify this concept for you?
+  - What's something that was surprising to you as you first learned about R in this class? What made it surprising.
+  
+**Answer**
