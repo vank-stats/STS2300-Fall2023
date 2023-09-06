@@ -1,0 +1,72 @@
+---
+title: "STS 2300 Unit 1 Review"
+output: html_document
+date: "2023-09-06"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Below are some questions that have come up that I thought would be good to discuss as a class.
+
+
+## It's hard to keep packages straight.
+
+Let's organize this a little bit.
+
+1. dplyr - Most of the functions from Notes 3 are in here (`select()`, `filter()`, `mutate()`, `summarize()`, `rename()`, `n()`, `%>%`). This will be a package we use a lot.
+
+2. stringr - This was used in Activity 3A to access the `str_detect()` and `str_replace()` functions.
+
+3. moderndive - This is the R package for our textbook. We have only used this to access certain data sets for examples.
+
+4. rvest - This was used in Activity 3A to let us scrape data from a website. For our class, you will basically be able to copy the code we've used for this and replace the URL and which table is being selected with `pluck()`.
+
+5. kableExtra - This allows us to make nicer looking tables. We use functions like `kbl()` and then `kable_classic()`. For the most part, you can rely on old examples of this or the URL I shared when creating your tables.
+
+6. skimr - We used for the `skim()` function in Notes 1. This is probably something you would use to explore data on your own, but not something you would put in a .Rmd document.
+
+7. janitor - This package in general is for cleaning data. We haven't really used it for that yet, but you might want in the future. We used it to create tables more like SAS's PROC FREQ using the `tabyl()` function.
+
+8. swirl - This is just a tool for you to get interactive practice learning R.
+
+
+
+## What does `%>%` really do?
+
+For our class, we will need to load the `dplyr` package to use the pipe operator (`%>%`). When we use this, it takes whatever is on the left and makes it the first argument for the function on the right.
+
+So for example these two options do the same thing.
+
+```{r}
+library(dplyr)
+
+# Option 1 (without %>%)
+mutate(mtcars, wt_lbs = wt * 1000)
+
+# Option 2 (with %>%)
+mtcars %>% 
+  mutate(wt_lbs = wt * 1000)
+```
+
+If I'm only doing this one step, either one of these options works just fine. If I wanted to do multiple steps (e.g. filter out certain rows, then select only certain columns, then summarize my result), it's usually best to use the pipe operator so that I don't have to keep restating a data frame for the first argument.
+
+
+
+## When do we use something like `mtcars$wt` vs. just `wt`?
+
+If I'm using a function that asks me for a data frame name as part of the function, I typically don't need to then use data$__ to reference my variable. This includes basically all of the `dplyr` functions.
+
+In contrast, the `table()` function doesn't have an argument for a data frame, so we need to use data$__ within that function.
+
+
+
+## What is the difference between = and ==
+
+A single = sign is used for function arguments to set a value for the function. A double == sign is used to check if two things are equivalent. This produces a TRUE or FALSE value / vector as a result.
+
+
+## Many of you mentioned difficulty remembering functions, syntax, etc.
+
+Creating your own well organized cheat sheet with examples can be really helpful for this.
