@@ -68,6 +68,9 @@ hugo_noms <- rename(hugo_noms, Author = "Author(s)")
 
 ```{r}
 hugo_noms <- select(hugo_noms, Year, Author, Novel)
+
+# Alternate approach
+# select(hugo_noms, Year:Novel)
 ```
 
 <br>
@@ -76,7 +79,8 @@ hugo_noms <- select(hugo_noms, Year, Author, Novel)
 5. The asterisk at the end of an author's name is used to tell us whether an author won the award that year. We can use the `str_detect()` function from the `stringr` package to see if an asterisk is part of the name. Install the `stringr` package and add code at the top of the document to load the package. Then add code below that uses the `mutate()` function to create a new variable called `Winner` calculated as `str_detect(Author, "\\*")`. What does our new winner column look like? (Note: Because asterisks are a special character, we add `\\` in front of it in the code.)
 
 ```{r}
-hugo_noms <- mutate(hugo_noms, Winner = str_detect(Author, "\\*"))
+hugo_noms <- mutate(hugo_noms, Winner = str_detect(Author, "\\*"),
+                    "NonWinner" = !str_detect(Author, "\\*"))
 ```
 
 **Answer:**
@@ -94,7 +98,7 @@ hugo_noms <- mutate(hugo_noms, Author = str_remove(Author, "\\*"))
 6. Create a new object called `hugo_winners` that only includes the books that won the award.
 
 ```{r}
-
+hugo_winners <- filter(hugo_noms, Winner == TRUE)
 ```
 
 <br>
@@ -103,7 +107,14 @@ hugo_noms <- mutate(hugo_noms, Author = str_remove(Author, "\\*"))
 7. Create a new object called `hugo_authors` that calculates the number of nominations (including wins) and number of wins for each author. Then sort the in descending order by number of nominations. Which author has been nominated the most for this award? Which author was nominated the most without ever winning? (Hint: In R, values of TRUE count as a 1 and values of FALSE count as a 0 in numeric calculations. To find the number of wins, use the `sum()` function.)
 
 ```{r}
+hugo_authors <- hugo_noms %>%
+  summarize(Nominations = n(),
+            Wins = sum(Winner),
+            .by = Author) %>%
+  arrange(desc(Nominations))
 
+# Note: If you wanted to also sort by Wins, try:
+#   arrange(desc(Nominations), desc(Wins))
 ```
 
 **Most nominations:**
@@ -124,7 +135,17 @@ hugo_noms <- mutate(hugo_noms, Author = str_remove(Author, "\\*"))
   - Sort the list in descending order by number of nominations
   
 ```{r}
-
+hugo_authors <- hugo_award %>%
+  purrr::pluck(2) %>%
+  html_table() %>%
+  rename(Author = "Author(s)") %>%
+  select(Year, Author, Novel) %>%
+  mutate(Winner = str_detect(Author, "\\*"),
+         Author = str_remove(Author, "\\*")) %>%
+  summarize(Nominations = n(),
+            Wins = sum(Winner),
+            .by = Author) %>%
+  arrange(desc(Nominations))
 ```
 
 
