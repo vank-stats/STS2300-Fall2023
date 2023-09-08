@@ -113,3 +113,39 @@ bridges %>%
 
 select(bridges, AGE, YEARBUILT) %>%
   tail(n = 10)
+
+
+
+
+# Long vs. Wide Data
+
+birds_wide <- read.csv("https://raw.githubusercontent.com/vank-stats/STS2300-Fall2023/main/nestbox_lands_wide.csv")
+birds_long <- read.csv("https://raw.githubusercontent.com/vank-stats/STS2300-Fall2023/main/nestbox_lands_long.csv")
+
+
+
+library(tidyr) # pivot_longer() and pivot_wider() are in this package
+library(dplyr)
+library(stringr) 
+
+# Option 1 with %>%
+
+birds_wide %>%
+  pivot_longer(cols = X2012:X2023, 
+               names_to = "Year", 
+               values_to = "Fledged") %>%
+  mutate(Year = str_remove(Year, "X"),
+         Year = as.numeric(Year))
+
+# Option 2 without %>%
+
+pivot_longer(birds_wide, 
+             cols = -Species, 
+             names_to = "Year", 
+             values_to = "Fledged") 
+
+
+
+birds_long %>%
+  pivot_wider(names_from = Year, values_from = Fledged)
+
