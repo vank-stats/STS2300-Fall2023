@@ -17,6 +17,9 @@ bridges <- read_csv("NC Bridges.csv",
 
 library(dplyr) # filter, mutate, summarize, and %>% are part of this package
 
+
+## This is an example of a task done without the pipe operator
+
 # Subset the mtcars dataset to only include cars with automatic transmission
 auto <- filter(mtcars, am == 0)
 
@@ -33,7 +36,9 @@ mean_wt_by_cyl <- arrange(mean_wt_by_cyl, cyl)
 mean_wt_by_cyl
 
 
-# Same example as above, but using the pipe operator (read as "and then")
+
+## Here is the same task, but using the pipe operator 
+## Read the %>% symbol as "and then" in the code
 
 mean_wt_by_cyl <- mtcars %>%
   filter(am == 0) %>%
@@ -68,6 +73,7 @@ bad_bridges <- bridges %>%
 table(bridges$STRUCTURALLYDEFICIENT, bridges$FUNCTIONALLYOBSOLETE)
 
 
+
 # Create a subset of Alamance county bridges that are either structurally
 # deficient OR functionally obsolete (or both)
 
@@ -85,6 +91,8 @@ table(alam_watchout$STRUCTURALLYDEFICIENT, alam_watchout$FUNCTIONALLYOBSOLETE)
 
 # Practice with select()
 
+# Choosing only the ROUTE, ACROSS, YEARBUILT, and SR columsn
+
 alam_bridges <- select(alam_bridges, ROUTE, ACROSS, YEARBUILT, SR)
 
 
@@ -93,23 +101,28 @@ alam_bridges <- select(alam_bridges, ROUTE, ACROSS, YEARBUILT, SR)
 
 # Practice with mutate()
 
+# Creating a new variable called wt_lbs in my data
+
 mycars <- mutate(mtcars, wt_lbs = wt * 1000)
+
+# Verifying my new variable worked as intended
 
 mycars %>%
   select(wt, wt_lbs) %>%
   head(n = 5)
 
+
 # Create AGE variable (2023 - YEARBUILT). Print just AGE/YEARBUILT for last 10.
 
 bridges <- mutate(bridges, AGE = 2023 - YEARBUILT)
 
-# Option 1
+# Option 1 - Pipe bridges into select function's first argument
 
 bridges %>%
   select(AGE, YEARBUILT) %>%
   tail(n = 10)
 
-# Option 2
+# Option 2 - Type bridges as first argument in select function
 
 select(bridges, AGE, YEARBUILT) %>%
   tail(n = 10)
@@ -119,14 +132,20 @@ select(bridges, AGE, YEARBUILT) %>%
 
 # Long vs. Wide Data
 
+# Read data in from course code repository
+
 birds_wide <- read.csv("https://raw.githubusercontent.com/vank-stats/STS2300-Fall2023/main/nestbox_lands_wide.csv")
 birds_long <- read.csv("https://raw.githubusercontent.com/vank-stats/STS2300-Fall2023/main/nestbox_lands_long.csv")
 
 
+# We're using these three packages below
 
 library(tidyr) # pivot_longer() and pivot_wider() are in this package
-library(dplyr)
-library(stringr) 
+library(dplyr) # used for %>% and mutate()
+library(stringr) # added this for str_remove() function
+
+
+# Converting from wide to long format
 
 # Option 1 with %>%
 
@@ -145,6 +164,8 @@ pivot_longer(birds_wide,
              values_to = "Fledged") 
 
 
+
+# Converting from long to wide format
 
 birds_long %>%
   pivot_wider(names_from = Year, values_from = Fledged)
