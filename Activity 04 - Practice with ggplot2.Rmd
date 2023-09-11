@@ -1,0 +1,143 @@
+---
+title: "Activity 04 - Practice with ggplot2"
+author: "STS 2300 (Dr. VanKrevelen)"
+date: 'Updated: 9/11/2023'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# Load required packages here - change options to remove messages
+
+library(ggplot2)
+library(palmerpenguins) # You may need to install this one first
+```
+
+1. Within the `palmerpenguins` package, there is a data frame called `penguins`. You may see this dataset used in some R textbooks or online examples. Use an R function (or functions) to learn more about the structure of this data. Then list examples of variables that are stored as categorical and as numeric.
+
+**Categorical variable examples:**
+
+**Numeric variable examples:**
+
+<br>
+
+
+2. Let's make a bar graph of the penguin species. Change the border around the bars to be white.
+
+```{r}
+
+```
+
+<br>
+
+
+3. See what happens when you map the variable `sex` to the `fill` argument. (Note: Should `fill` go inside or outside of `aes()`? How do you know?)
+
+```{r}
+
+```
+
+**What happens when we map a variable to `fill` in a bar graph?:**
+
+<br>
+
+
+4. Try adding the argument `position = "fill"` to your `geom_bar()` function. What does this do? Why might we want to view the graph this way?
+
+```{r}
+
+```
+
+**What does `position = "fill"` do?:**
+
+**What is the benefit of viewing the graph like this?:**
+
+<br>
+
+
+5. Next, make a side-by-side boxplot of `bill_length_mm` by `species` where the lines around each boxplot are lightblue.
+
+```{r}
+
+```
+
+<br>
+
+
+6. Add an argument that maps `sex` to `fill`. What does this do?
+
+```{r}
+
+```
+
+**What does mapping a new variable to fill do?:**
+
+<br>
+
+
+7. There's no easy way to remove the NA boxes without removing them from the data. Try replacing `penguins` in your `ggplot()` function with `filter(penguins, !is.na(sex))` and re-run your code. What is `!is.na(sex)` doing?
+
+```{r}
+
+```
+
+**What is `!is.na(sex)` doing?:**
+
+<br>
+
+
+8. One easy way to improve / customize the look of our graphs is to add a theme. We can do this by adding another function to our graphing object we are creating (like we added `geom_boxplot()` to `ggplot()`). Try adding `theme_xx()` where xx is one of the following: bw, classic, dark, minimal, void. You may want to try multiple options until you find one you like best. You can also see examples [here](https://ggplot2.tidyverse.org/reference/ggtheme.html) if you scroll down.
+
+```{r}
+
+```
+
+<br>
+
+
+9. We've seen what happens when we map a variable to fill/color for bar graphs and box plots... let's see how that works with histograms. Create a histogram of `body_mass_g` and map `species` to `fill`.
+
+```{r}
+
+```
+
+<br>
+
+
+10. In our histogram, the three species are stacked on top of one another, which makes it hard to see how many of each there are. One option is to create separate histograms for each species. We can do this using the `facet_wrap()` function. To do this, add a layer to your graph that says `facet_wrap(vars(species))`.
+
+```{r}
+
+```
+
+<br>
+
+
+11. If we want to control how many rows or columns the graphs are put into, we can use the `nrow = __` or `ncol = __` arguments. Try using one of those arguments to stack the three histograms on top of one another. What's an advantage to viewing the graphs this way?
+
+```{r}
+
+```
+
+**Advantage to stacking the graphs:**
+
+<br>
+
+
+12. We can use a different function called `facet_grid()` to create a grid of graphs corresponding to our different variables. Take our histogram from question 9 and add `facet_grid(rows = vars(sex), cols = vars(species))` to it. (Note: If you want to remove NAs, go back to how we previously accomplished that).
+
+```{r}
+
+```
+
+
+13. Find a dataset we've used this semester (or another one you have) and practice applying some of these features to create a new graph. Consider adding color (as a variable or as a single color), adding a theme, facetting your graph across one or two variables, etc.
+
+```{r}
+
+```
+
