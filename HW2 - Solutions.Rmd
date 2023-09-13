@@ -1,0 +1,158 @@
+---
+title: "Homework 2 (50 points total)"
+author: "Put Your Name Here"
+date: 'Due: 9/11/2023'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+
+# Note About Answering Homework and Exam Questions With New Approaches
+
+**There are multiple ways to accomplish the tasks described in this homework assignment. If you use methods that we did not discuss in class (e.g. notes, activities, questions during class), you should explain where you learned your method and how it is accomplishing the task. For example, it's possible to subset data using "square bracket" notation. If I did this, I would say how I learned about it and why the code I used successfully subsets the data in the way I want**
+
+---
+
+Use the code chunk below to load any R libraries that you use in your script. I've added `dplyr` as a start.
+
+```{r, message = FALSE}
+library(dplyr)
+library(readxl)
+library(tidyr)
+library(rvest)
+```
+
+---
+
+# Part 1 - Math/Stats Majors Data (28 points total)
+
+1. (4 points) Download the **MTH_STS_Majors.xlsx** file from the Data Files folder on the course Moodle page. Store it in the same location as this .Rmd file. Add code below to read the data set into R as an object called `majors`. (Note: If you need to load any R packages to do this, you should put the code to load them up above.)
+
+```{r}
+majors <- read_excel("MTH_STS_Majors.xlsx")
+```
+
+<br>
+
+
+2. (5 points) Convert the data from wide format to long format. The `Year` and `ArtsSciences` columns will remain the same. Your long format data will have two other columns: `Major` and `Count`. Call this new data frame `majors_long`. (Note: You will likely need to load the `tidyr` pacakge. Add this at the top of the document.)
+
+```{r}
+majors_long <- majors %>%
+  pivot_longer(cols = Stats:Data_Analytics, 
+               names_to = "Major", 
+               values_to = "Count")
+```
+
+<br>
+
+
+3. (4 points) Create a new variable in your `majors_long` data frame called `MajorsPer100` that calculates the number of majors per 100 students in the College of Arts and Sciences. This can be done by taking your `Count` variable and dividing by the `ArtsSciences` variable and then multiplying by 100.
+
+```{r}
+majors_long <- mutate(majors_long, MajorsPer100 = Count / ArtsSciences * 100)
+```
+
+<br>
+
+
+4. (4 points) Write code to get rid of the `ArtsSciences` variable from your `majors_long` data frame. Print the first 4 and last 4 rows of your new data frame.
+
+```{r}
+majors_long <- select(majors_long, -ArtsSciences)
+head(majors_long, n = 4)
+tail(majors_long, n = 4)
+```
+
+<br>
+
+
+5. (5 points) The code chunk below is set to `eval = FALSE`. Write code using the pipe operator that will accomplish questions 1 - 4 all in one step. In other words, you will only use the assignment operator once to go from reading your data in all the way to creating the data frame in Question 4.
+
+```{r, eval = FALSE}
+majors_long <- read_excel("MTH_STS_Majors.xlsx") %>%
+  pivot_longer(cols = Stats:Data_Analytics, 
+               names_to = "Major", 
+               values_to = "Count") %>%
+  mutate(MajorsPer100 = Count / ArtsSciences * 100) %>%
+  select(-ArtsSciences)
+```
+
+<br>
+
+
+6. (6 points) In the space below, write a sentence using in-line R code that tells the reader the largest number of Stats majors there have ever been in a year and the average number of Math majors each year. (Note: Make sure you don't get an NA in your knitted document.)
+
+**Your sentence:** The largest number of stats majors has been `r max(majors$Stats, na.rm = TRUE)` and the average number of math majors per year is `r mean(majors$Math)`.
+
+<br>
+
+
+---
+
+# Part 2 - Billboard Hot 100 (20 points total)
+
+7. (5 points) The [following link](https://en.wikipedia.org/wiki/List_of_Billboard_Hot_100_number-one_singles_of_the_2020s) includes a table with all of the songs to reach number one on the Billboard Hot 100 list since 2020. I've created an object called `url` below that includes the link. Use the `rvest` package to create a data frame of this data called `billboard`. Once you've done that, uncomment the code to rename the columns. (Note: You'll need to add the code to load `rvest` at the top of the document with the other packages you're using.)
+
+```{r}
+url <- "https://en.wikipedia.org/wiki/List_of_Billboard_Hot_100_number-one_singles_of_the_2020s"
+
+billboard <- url %>%
+  read_html() %>%
+  html_nodes("table")
+
+billboard <- billboard %>%
+  purrr::pluck(3) %>%
+  html_table()
+
+colnames(billboard) <- c("Number", "Date", "Artist", "Song", "Weeks", "References", "Empty")
+```
+
+<br>
+
+
+8. (9 points) Now let's clean up the `billboard` data. Write code that does each of the following:
+
+  - Remove the rows that only list years (2020, 2021, 2022, 2023). (Hint: Use `filter()` and the not equals option.)
+  - Subset the data to only include columns for the artist, song name, and weeks at number one.
+  - Convert the `Weeks` variable to numeric (Hint: You can use `mutate()` and a function mentioned in Notes 2. There will be a warning because the final song has an asterisk next to its number, so it will be converted to NA.)
+
+```{r}
+billboard <- billboard %>%
+  filter(References != "2020",
+         References != "2021",
+         References != "2022",
+         References != "2023") %>%
+  select(Artist, Song, Weeks) %>%
+  mutate(Weeks = as.numeric(Weeks))
+```
+
+<br>
+
+
+9. (6 points) Write code that creates a data frame counting how many number one songs each artist had, then remove all artists with only 1 number one song, and sort the remaining artists in descending order by number of songs.
+
+```{r}
+billboard %>%
+  summarize(Count = n(), .by = Artist) %>%
+  filter(Count > 1) %>%
+  arrange(desc(Count))
+```
+
+<br>
+
+---
+
+# Reflection (2 points)
+
+10. (2 points) Reflection: Answer one (or both) of the following questions. Your answer should be at least 3 - 4 sentences long and demonstrate some level of reflection (i.e. not just a few words).
+
+  - What's something that has been challenging for you in the class so far. What has made it challenging and how could that challenge be addressed moving forward?
+  - What's something you want to learn how to do with R before the semester is done? Why is this something you're interested in learning?
+  
+**Answer:** Answers will vary
