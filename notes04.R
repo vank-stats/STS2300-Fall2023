@@ -64,3 +64,22 @@ ggplot(data = airquality) +
                  color = "white",
                  binwidth = 5,
                  boundary = 55)
+
+
+
+# Practice boxplots
+
+ggplot(ToothGrowth) +
+  geom_boxplot(aes(x = supp, y = len),
+               fill = "black",
+               color = "pink")
+
+
+
+# Practice bar graph
+# We made each bar a different color by mapping the cut variable to fill
+# To do this, we put fill = cut inside the aes() function
+
+ggplot(diamonds) +
+  geom_bar(aes(x = cut, fill = cut),
+           color = "black")
