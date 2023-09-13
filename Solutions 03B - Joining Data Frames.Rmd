@@ -12,7 +12,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, message = FALSE}
+```{r}
 # Load required packages here - change options to remove messages
 
 library(dplyr)
@@ -33,7 +33,7 @@ An R package called `Lahman` includes multiple data frames with different kinds 
 str(Batting)
 ```
 
-**Answer:** There are 22 variables 112,184 observations
+**Answer:** There are 110,495 observations and 22 variables
 
 <br>
 
@@ -43,21 +43,19 @@ str(Batting)
 ```{r}
 results <- Batting %>%
   filter(teamID == "MIN", H >= 200)
-
-summarize(results,
-          Count = n(),
-          .by = playerID)
+str(results)
+table(results$playerID)
 ```
 
-**Answer:** In the environment, I can see there are 13 observations (aka rows). When I summarize by playerID, I can see there are only five different players.
+**Answer:** There are 13 rows in results. However, there are only five different players.
 
 <br>
 
 
 3. This output isn't very useful because most people won't know who `olivato01` is. However, we could find that out by using the `People` data frame. This data frame includes biographical information including a player's first and last name. We can use join functions to combine the information from our two data frames. When we use the function `left_join()` from the `dplyr` package, we take all of the observations in our first data frame and add information from the second data frame that matches a common key. Remove `eval = FALSE` and observe the results of the new data frame.
 
-```{r, eval = TRUE}
-results <- left_join(results, People, by = join_by(playerID))
+```{r}
+left_join(results, People, by = join_by(playerID))
 ```
 
 <br>
@@ -66,7 +64,8 @@ results <- left_join(results, People, by = join_by(playerID))
 4. In addition to choosing which variables we keep from a data frame, the `select()` function also lets us choose an order. Take the code from the previous question and use `select()` so that we only see `nameFirst`, `nameLast`, `yearID`, `H`. Now we have something that might be useful to a person playing this game!
 
 ```{r}
-
+left_join(results, People, by = join_by(playerID)) %>%
+  select(nameFirst, nameLast, yearID, H)
 ```
 
 <br>
@@ -75,7 +74,8 @@ results <- left_join(results, People, by = join_by(playerID))
 5. Another function you might want to use is called `inner_join()`. This function will return only rows that have matching values in both data frames. Sometimes Immaculate Grid will ask people to name a player who played for two different teams. Suppose we want to determine hitters (`Batting`) data frame who played for the the Boston Red Sox (teamID of BOS) and the New York Yankees (teamID of NYA). Start by creating a data frame called `BOS` that only includes Red Sox players. Then summarize that data frame by player with a variable called `Seasons` that counts how many times each player shows up in the data.Then count the number of times a player shows up using `summarize()` and `.by = playerID`. Next do the same think for the Yankees and create `NYA`.
 
 ```{r}
-
+BOS <- filter(Batting, teamID == "BOS") %>%
+  summarize(Seasons = n(), .by = playerID)
 ```
 
 <br>
@@ -84,7 +84,8 @@ results <- left_join(results, People, by = join_by(playerID))
 6. Now do the same thing for the Yankees to create an object called `NYA`.
 
 ```{r}
-
+NYA <- filter(Batting, teamID == "NYA") %>%
+  summarize(Seasons = n(), .by = playerID)
 ```
 
 <br>
@@ -93,7 +94,8 @@ results <- left_join(results, People, by = join_by(playerID))
 7. Once you have both data frames, use `inner_join()` to join them by `playerID`. Your code will look very similar to when we used `left_join()`. What does your resulting data frame look like?
 
 ```{r}
-
+BOS_NYA <- inner_join(BOS, NYA, by = join_by(playerID))
+str(BOS_NYA)
 ```
 
 <br>
@@ -107,10 +109,15 @@ results <- left_join(results, People, by = join_by(playerID))
   - NYA_Seasons
   
 ```{r}
-
+BOS_NYA <- BOS_NYA %>%
+  rename(BOS_Seasons = "Seasons.x",
+         NYA_Seasons = "Seasons.y") %>%
+  left_join(People, by = join_by(playerID)) %>%
+  select(nameFirst, nameLast, BOS_Seasons, NYA_Seasons)
+str(BOS_NYA)
 ```
 
-**How many batters played for both teams?**:
+**How many batters played for both teams?**: 232
 
 
 <br>
