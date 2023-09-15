@@ -1,0 +1,204 @@
+---
+title: "STS 2300 - Exam 1"
+author: "Put Your Name Here"
+date: '09/15/2023'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+
+During this exam, you are allowed to use your notes and other resources (e.g. our Moodle page, Google). You are **NOT allowed** to discuss the exam with anyone else (including but not limited to classmates, tutors, online message boards, through social media, using shared notes with someone else, etc.) until after everyone has completed the exam. Any violation of these rules will be considered a violation of the Elon Honor Code and will be handled as such. Type your name below to acknowledge your acceptance of these rules. If you have *any* questions, please be sure to ask Dr. V to get clarification.
+
+Enter your name in the space below to acknowledge your agreement to these guidelines.
+
+**I, YOUR NAME HERE, have read and understand the rules above. I agree to follow these rules for the exam and accept that not abiding by these rules will be treated as a violation of Elon's Honor Code.**
+
+---
+
+Use this space to load any R libraries that you use in your script. I've added `dplyr` and `ggplot2`  to start.
+
+```{r, message = FALSE}
+library(dplyr)
+library(ggplot2)
+```
+
+---
+
+# Part 1 - NC School Testing Data Example (45 points total)
+
+There is a file right below this exam file called **NC_School_Test_Data.csv**. Download it and put it in the same folder as this .Rmd script. Use it to complete the questions in this section.
+
+1. (4 points) In the space below this question, create a link for the URL that says "NC Testing Data Source" and takes you to the following webpage. https://www.wral.com/story/how-well-did-your-school-do-look-up-2023-test-scores-here/21034752/ 
+
+
+
+
+<br>
+
+
+2. (9 points) Create code for this document that will read NC_School_Test_Data.csv file into R and store it in an object called `schools`. (Note: If you're loading a new package, you should put that up at the top of this document with the other packages you are using.) Then write code that can help you identify the number of variables and number of observations in the data. Use that to complete the text below. Lastly, edit your code chunk so that no messages are displayed when you read in the data.
+
+```{r}
+# If you are unable to read the data into R, you can uncomment the line below 
+# so that you can still completed future questions.
+
+# schools <- read.csv("https://raw.githubusercontent.com/vank-stats/STS2720-Fall2021/main/NC_School_Test_Data.csv")
+
+
+
+```
+
+**Number of observations:**
+
+**Number of variables:**
+
+
+<br>
+
+
+3. (9 points) Write code that will produce output showing the *number* of schools who have Not Met, Met, or Exceeded expectations (`GrowthMeasure` variable) and the *proportion* of schools in each category. If there are missing values, these should also be included in your summary. Use your code to answer the two questions below.
+
+```{r}
+
+```
+
+The number of schools that have exceeded expectations is ____.
+
+The proportion of schools with missing growth measure data is ____.
+
+<br>
+
+
+4. (6 points) We are in the "Alamance-Burlington Schools" district. Write code that creates a new object called `abss` that includes only schools in this district. How many schools are in this district?
+
+```{r}
+
+```
+
+**Answer:**
+
+<br>
+
+
+5. (7 points) Choose **one** of the following new variables and create it in either your `schools` or `abss` data frame. Then print the first 8 rows of the data frame you used to create the variable. (Note: If you are using a function that requires loading a new package, do that at the top of the document with the other packages)
+
+  - A variable called `HighSchool` that is TRUE if the school is a high school (i.e. has "High" in the `School` name) and FALSE otherwise
+  - A variable called `Passing` that is TRUE if the school received a performance grade of A, B, C, or D, and FALSE otherwise.
+  - A variable called `TopSchool` that is TRUE if the school received a performance grade of A **and** Exceeded expectations in their growth measure.
+
+```{r}
+
+```
+
+
+<br>
+
+
+6. (10 points) For whichever data frame you used to create your new variable, write code using piping that will (i) count the number of TRUE values in each school district, (ii) sort the school districts from highest to lowest count, (iii) display the ten highest school districts.
+
+```{r}
+
+```
+
+
+<br>
+
+
+---
+
+
+
+# Part 2 - Fidget Spinners Example (35 points total)
+
+The code below will read in a data set from a study looking at the impact of fidget spinners on attention and memory. There were three groups in the study: (i) people with no fidget spinner present, (ii) people who were using a fidget spinner, and (iii) people who were not using a fidget spinner but were near someone who was.
+
+```{r}
+fidget <- read.csv("https://raw.githubusercontent.com/vank-stats/STS2720-Fall2022/main/fidget_spinners.csv")
+```
+
+
+7. (5 points) Explain the difference between a data frame and a vector, and give an example using the `fidget` data. 
+
+**Answer:**
+
+
+<br>
+
+
+8. (6 points) Update the `fidget` data by removing the columns for `Participant` and `MemoryProportion`.
+
+```{r}
+
+```
+
+<br>
+
+
+9. (8 points) Create a histogram of the `MemoryScore` variable where the lowest bar starts at 0 and each bar is 1 point wide. The bars should be a color other than black with a different color used as the lines around the bars.
+
+```{r}
+
+```
+
+
+<br>
+
+
+10. (8 points) Create an object called `att_sum` that contains the mean and standard deviation `AttentionScore` for each `Condition`. Call your columns `mean_att` and `sd_att`.
+
+```{r}
+
+```
+
+<br>
+
+
+11. (8 points) Use the `kableExtra` package to create a nice looking display of your `att_sum` object. The table should not stretch across the entire page. Use in-line R code to state the overall mean attention score after the table.
+
+```{r}
+
+```
+
+The overall mean attention score is REPLACE THIS WITH YOUR IN-LINE R CODE.
+
+
+---
+
+
+# Part 3 - Short Answer (20 points total)
+
+Each question in this section can be answered with 3 - 4 sentences. If a question has more than one part, make sure each is being addressed in your response.
+
+
+12. (5 points) What is the difference between the `install.packages()` and `library()` functions. When should each be used?
+
+**Answer:**
+
+
+<br>
+
+
+13. (5 points) In the `ggplot2` package, what is the purpose of the `aes()` function? Give an example using the fidget data to help clarify your answer.
+
+**Answer:**
+
+
+<br>
+
+
+14. (5 points) What phrase do we use when reading code that includes a pipe operator (`%>%`)? What role does the pipe operator play in our code?
+
+**Answer:**
+
+
+<br>
+
+
+15. (5 points) There are certain functions that we might want to include in a .R script but not in a .Rmd file. How do these file types differ and why might we not want certain functions in a .Rmd file?
+
+**Answer:**
