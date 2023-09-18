@@ -70,7 +70,8 @@ ggplot(data = airquality) +
 # Practice boxplots
 
 ggplot(ToothGrowth) +
-  geom_boxplot(aes(x = supp, y = len),
+  geom_boxplot(aes(x = supp, 
+                   y = len),
                fill = "black",
                color = "pink")
 
@@ -81,5 +82,18 @@ ggplot(ToothGrowth) +
 # To do this, we put fill = cut inside the aes() function
 
 ggplot(diamonds) +
-  geom_bar(aes(x = cut, fill = cut),
+  geom_bar(aes(x = cut, 
+               fill = cut),
            color = "black")
+
+
+
+# Mapping other variables to aesthetic elements with aes()
+
+ggplot(mtcars) +
+  geom_point(aes(x = wt, y = mpg, color = drat, shape = as.factor(am)))
+
+
+# Notice that I get an error trying to map a continuous variable to shape
+ggplot(mtcars) +
+  geom_point(aes(x = wt, y = mpg, color = am, shape = drat))
