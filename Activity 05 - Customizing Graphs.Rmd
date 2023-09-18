@@ -1,0 +1,152 @@
+---
+title: "Activity 5 - Customizing Fall Graphs"
+author: "STS 2300 (Dr. VanKrevelen)"
+date: 'Updated: 9/18/2023'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message = FALSE, warning = FALSE}
+library(ggplot2)
+library(readr)
+library(dplyr)
+```
+
+For this activity, you will choose one of the data sets below (or another Fall themed data set you know of) and create a graph with your own customized theme. Everyone will upload their final graph using the link on Moodle, and we will vote on a winner for best Fall graph. The winner will get a collection of highly coveted R stickers! (but really everyone is a winner)
+
+[This website](https://henrywang.nl/ggplot2-theme-elements-demonstration/) contains a nice example of elements of a theme that we can control.
+
+[Chapter 12](https://r4ds.hadley.nz/communication) of R for Data Science may also be useful.
+
+Since the focus is on customizing themes, scales, etc. (and not necessarily the graphs themselves), I've created a sample graph for each data set that you are welcome to use. You can find an example of a customized Elon theme in Notes 5. You may want to use this as a template to get started.
+
+---
+
+# Big pumpkins
+
+This dataset from [TidyTuesday](https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-10-19/readme.md) contains data on over 28,000 giant pumpkins (and other fruits/vegetables) entered into competitions. The variables include things like where it was grown and its weight. (Note: This data is pretty messy, so it might be hard to do anything to interesting in a short amount of time.)
+
+Below is code to read it into R and to get started. To make the data easier to use, I've told R to treat numeric variables as numbers and limited the data to just the 427 observations from North Carolina.
+
+```{r, warning = FALSE, message = FALSE, eval = TRUE}
+pumpkins <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-10-19/pumpkins.csv') %>%
+  mutate(weight_lbs = as.numeric(weight_lbs), ott = as.numeric(ott),
+         est_weight = as.numeric(est_weight), pct_chart = as.numeric(pct_chart)) %>%
+  filter(state_prov == "North Carolina")
+
+ggplot(pumpkins) +
+  geom_point(aes(x = ott, y = est_weight)) +
+  labs(x = "Over the top inches", y = "Estimated weight (in pounds)")
+```
+
+---
+
+# Global temperatures
+
+This dataset from [TidyTuesday](https://github.com/rfordatascience/tidytuesday/blob/master/data/2023/2023-07-11/readme.md) looks at global temperatures in the Northern Hemisphere. Specifically, it is tracking the deviation in mean monthly temperature from the 1951-1980 mean. The SON variable combines September, October, and November into one average.
+
+```{r}
+nh_temps <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-07-11/nh_temps.csv')
+
+ggplot(nh_temps, aes(x = Year, y = SON)) +
+  geom_point() +
+  geom_line() +
+  geom_hline(yintercept = 0) +
+  labs(title = "Average monthly temp above / below 1951-1980 mean",
+       subtitle = "September, October, and November",
+       y = "Average deviation from 1951 - 1980 mean")
+```
+
+---
+
+# NC Weather Forecasts
+
+Official Fall: September 23 to December 20
+
+```{r}
+library(lubridate)
+
+weather_forecasts <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-12-20/weather_forecasts.csv') %>%
+  mutate(Fall = month(date) %in% c(9, 10, 11)) %>%
+  filter(state == "NC")
+
+ggplot(weather_forecasts, aes(x = observed_temp, y = city, fill = high_or_low)) +
+  geom_boxplot() +
+  labs(title = "Fall Temperatures")
+```
+
+
+# Horror movie ratings
+
+This dataset from [TidyTuesday](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-10-22) contains data on 3,328 horror movies. The variables include things like rating, run time, and budget of horror movies. 
+
+Below is code to read it into R and to get started. To make the data easier to use, I've converted movie run times and budget to numeric in R and limited the data to just movies released in the US. There are 2,092 movies after doing this.
+
+```{r, warning = FALSE, message = FALSE, eval = TRUE}
+horror_movies <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-22/horror_movies.csv") %>%
+  filter(release_country == "USA") %>%
+  mutate(movie_run_time = as.numeric(gsub(" min", "", movie_run_time)),
+         budget = gsub("\\$", "", budget), 
+         budget = as.numeric(gsub(",", "", budget)))
+
+ggplot(horror_movies) +
+  geom_point(aes(x = budget, y = review_rating, color = movie_run_time)) +
+  scale_x_log10(labels = scales::dollar)
+```
+
+---
+
+# Horror movie profits
+
+This dataset from [TidyTuesday](https://github.com/rfordatascience/tidytuesday/tree/master/data/2018/2018-10-23) contains data on 298 horror movies (and lots of non-horror movies). The variables include things like production budget, revenue, and age rating. 
+
+Below is code to read it into R and to get started. To make the data easier to use, I've limited it to just horror movies.
+
+```{r, warning = FALSE, message = FALSE, eval = TRUE}
+horror_profits <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-10-23/movie_profit.csv") %>%
+  filter(genre == "Horror")
+
+ggplot(horror_profits) +
+  geom_point(aes(x = production_budget, y = worldwide_gross, 
+                 color = mpaa_rating)) +
+  scale_x_log10(labels = scales::dollar) +
+  scale_y_log10(labels = scales::dollar) +
+  geom_abline(slope = 1, intercept = 0)
+```
+
+---
+
+# Candy power rankings
+
+This dataset from [FiveThirtyEight](https://github.com/fivethirtyeight/data/tree/master/candy-power-ranking) comes from a survey where people chose which candy they preferred in head-to-head matchups. The data contains information on earch candy like whether it is chocolate, whether it contains nougat, and how often people chose it over another piece of candy in a head to head matchup. 
+
+Below is code to read it into R and to get started. I've converted most variables to character variables where "1" means "yes" and "0" means "no".
+
+```{r, warning = FALSE, message = FALSE, eval = TRUE}
+candy <- readr::read_csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/candy-power-ranking/candy-data.csv") %>%
+  mutate_at(vars(chocolate:pluribus), as.character)
+
+ggplot(candy) +
+  geom_boxplot(aes(x = chocolate, y = winpercent, fill = peanutyalmondy))
+```
+
+---
+
+# World Series Winners
+
+The MLB World Series is known as the "Fall Classic". Below is a graph from the `Lahman` package looking at the top World Series winners.
+
+```{r}
+library(Lahman)
+library(forcats)
+
+ggplot(filter(Teams, WSWin == "Y", yearID >= 1900)) +
+  geom_bar(aes(y = fct_rev(fct_infreq(name)))) +
+  labs(title = "World Series Wins Since 1901",
+       y = "Team")
+```
+
