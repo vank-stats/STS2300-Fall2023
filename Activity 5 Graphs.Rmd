@@ -1,0 +1,228 @@
+---
+title: "Code for Activity 5 Graphs"
+author: "STS 2300 (Fall 2023)"
+date: "In class on September 20, 2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message = FALSE}
+# These three packages are used for many of the graphs
+# Other packages are loaded with individual graphs below
+
+library(ggplot2)
+library(dplyr)
+library(readr)
+```
+
+
+# Graph A
+
+```{r, message = FALSE, warning = FALSE}
+library(lubridate)
+
+weather_forecasts <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-12-20/weather_forecasts.csv') %>%
+  mutate(Fall = month(date) %in% c(9, 10, 11)) %>%
+  filter(state == "NC") 
+
+ggplot(weather_forecasts, aes(x = observed_temp, y = city, fill = high_or_low)) +
+  geom_boxplot(alpha = 0.5, color = "burlywood4") +
+  labs(title = "Fall Temperatures",
+       subtitle = "Temperature from September 23- December 20, 2021 in North Carolina",
+       caption = "Observed high and low temperatures in four main North Carolina cities in 2021",
+       x = "Observed Temperature (ºF)",
+       y = "Major City",
+       fill = "Temperature \nExtreme") +
+  theme(plot.background = element_rect(fill = "cornsilk2", color = "darkgoldenrod3", linewidth = 1),
+        plot.margin = margin(20,20,20,20),
+        plot.title = element_text(color = "coral4", face = "bold", size = 18),
+        panel.background = element_rect(fill = "honeydew3"),
+        panel.border = element_rect(colour = "firebrick4", fill = NA),
+        panel.grid = element_line(colour = "grey93", linewidth = 0.1),
+        axis.text = element_text(colour = "indianred4"),
+        axis.title = element_text(face = "bold", colour = "coral4", size = 11),
+        axis.ticks = element_line(colour = "coral4", linewidth = 0.5),
+        legend.background = element_rect(fill =  "cornsilk3"),
+        legend.key = element_rect(fill = "honeydew3"),
+        legend.title = element_text(colour = "coral4", face = "bold"),
+        legend.text = element_text(colour = "indianred4"),
+        legend.margin = margin(10, 10, 10, 10)) +
+  scale_y_discrete(labels = c("Ashville", "Charlotte", "Greensboro", "Raleigh Durham")) +
+  scale_fill_manual(values = c("orangered3", "palegreen4"))
+```
+
+
+# Graph B
+
+```{r}
+library(Lahman)
+library(forcats)
+
+ggplot(filter(Teams, WSWin == "Y", yearID >= 1900)) +
+  geom_bar(aes(y = fct_rev(fct_infreq(name))),
+           fill= "blue",
+           color="white") +
+  labs(title = "World Series Wins Since 1901",
+       y = "Team",
+       x= "# of World Series Wins") +
+  scale_x_continuous(breaks = seq(0, 27, 2), expand= c(0.01,0)) +
+  theme(plot.background = element_rect(fill = "lightblue"),
+        panel.background = element_rect(fill = "white"),
+        panel.grid = element_line(color ="lightblue"),
+        plot.title = element_text(color = "red", 
+                                  size = 18, 
+                                  face = "bold"),
+        axis.title = element_text(color = "red", 
+                                  size = 14),
+        axis.text = element_text(color = "red"),
+        axis.ticks = element_line(color = "red"),
+        panel.grid.major.y =  element_line(color = "white"),
+        plot.margin = margin(15, 15, 15, 15))
+```
+
+
+
+# Graph C
+
+```{r, message = FALSE}
+library(Lahman)
+library(forcats)
+library(cowplot)
+library(magick)
+
+w <- ggplot(filter(Teams, WSWin == "Y", yearID >= 1900)) +
+  geom_bar(aes(y = fct_rev(fct_infreq(name)))) +
+  labs(title = "World Series Wins Since 1901",
+       y = "Team") +
+  theme(plot.background = element_rect(fill = "tan"),
+        panel.grid = element_line(color = "royalblue"),
+        plot.title = element_text(color = "royalblue",
+                                  size = 20,
+                                  face = "bold"),
+        axis.text = element_text(color = "black"),
+        plot.margin = margin(15, 15, 15, 15),
+        axis.title = element_text(color = "royalblue",
+                                  face = "bold"))
+
+ggdraw(w) +
+  draw_image("https://appstickers-cdn.appadvice.com/1155855565/819597058/da9d5f11b3c9975705f2a6a99dcf09f1-0.png", x = 0.83, y = 0.65, hjust = 1, vjust = 1,width = 0.25, height = 0.5)
+```
+
+
+# Graph D
+
+```{r, message = FALSE, warning = FALSE}
+horror_movies <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-22/horror_movies.csv") %>%
+  filter(release_country == "USA") %>%
+  mutate(movie_run_time = as.numeric(gsub(" min", "", movie_run_time)),
+         budget = gsub("\\$", "", budget), 
+         budget = as.numeric(gsub(",", "", budget)))
+
+ggplot(horror_movies) +
+  geom_point(aes(x = budget, y = review_rating, color = movie_run_time),
+             size = 2,
+             alpha = 0.8,
+             shape = 16) +
+  scale_x_log10(labels = scales::dollar)+
+  labs(title = "Horror Movie Ratings",
+       x = "Budget",
+       y = "Rating") +
+  theme(plot.background = element_rect(fill = "black"),
+        panel.background = element_rect(fill = "orange"),
+        panel.grid = element_line(color = "white"),
+        plot.title = element_text(color = "orange",
+                                  size = 20,
+                                  face = "bold",
+                                  family = "serif"),
+        axis.title = element_text(color = "orange",
+                                  size = 17,
+                                  family = "serif"),
+        axis.text = element_text(color = "orange",
+                                 size = 10,
+                                 family = "serif"),
+        axis.ticks = element_line(color = "white"),
+        legend.background = element_rect(fill = "orange"),
+        plot.margin = margin(25, 15, 15, 10))
+```
+
+
+
+# Graph E
+
+```{r, message = FALSE, warning = FALSE}
+pumpkins <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-10-19/pumpkins.csv') %>%
+  mutate(weight_lbs = as.numeric(weight_lbs), ott = as.numeric(ott),
+         est_weight = as.numeric(est_weight), pct_chart = as.numeric(pct_chart)) %>%
+  filter(state_prov == "North Carolina")
+
+ggplot(pumpkins) +
+  geom_point(aes(x = ott, y = est_weight, color = weight_lbs)) +
+  labs(title = "Giant Pumpkins",
+    x = "Over the top inches",
+    y = "Estimated weight (in pounds)") +
+  scale_color_viridis_c(option = "B") + 
+  theme(plot.background = element_rect(fill = "darkorange3"),
+        panel.background = element_rect(fill = "gray93"),
+        panel.grid = element_line(color = "grey85"),
+        plot.title = element_text(color = 'gray93',
+                                  size = 16,
+                                  face = "bold",
+                                  family = "Times"),
+        axis.title = element_text(color = "gray93",
+                                  size = 14,
+                                  family = "Times"),
+        axis.text = element_text(color = "gray93"),
+        axis.ticks = element_line(color = "gray93"),
+        plot.margin = margin(20,20,20,20)
+        )
+```
+
+
+
+# Graph F
+
+```{r}
+library(Lahman)
+library(forcats)
+
+ggplot(filter(Teams, WSWin == "Y", yearID >= 1900)) +
+  geom_bar(aes(y = fct_rev(fct_infreq(name))),
+       	fill = "goldenrod3") +
+  labs(title = "World Series Wins Since 1901",
+   	x = "Championship Count",
+   	y = "Team") +
+  theme(plot.background = element_rect(fill = "Black"),
+    	plot.title = element_text(family = "Arial",
+                              	color = "White",
+                              	size = 18,
+                              	face = "bold"),
+    	axis.title = element_text(color = "grey69",
+                              	size = 14),
+    	axis.text = element_text(color = "white"),
+    	)
+```
+
+
+
+# Graph G
+
+```{r, warning = FALSE}
+ggplot(weather_forecasts, aes(x = observed_temp, y = city, fill = high_or_low)) +
+  geom_boxplot(color = "navy")+
+  scale_fill_manual(values = c("pink", "yellow"))+
+  labs(title = "Fall Temperatures",
+       subtitle = "In North Carolina Cities",
+       fill = "High or Low",
+       x = "Observed Temperature (F)",
+       y = "North Carolina City")+
+  theme(plot.background = element_rect(fill = "lightblue1"),
+      panel.background = element_rect(fill = "white"),
+      panel.grid = element_line(color = "lightblue1"),
+      axis.text = element_text(color = "navy"),
+      axis.title = element_text(color = "navy"),
+      plot.title = element_text(color = "navy"))
+```
+
