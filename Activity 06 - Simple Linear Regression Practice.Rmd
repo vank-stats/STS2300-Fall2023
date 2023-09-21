@@ -1,0 +1,151 @@
+---
+title: "Activity 06 - Simple Linear Regression Practice"
+author: "STS 2300 (Dr. VanKrevelen)"
+date: 'Updated: 9/21/2023'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+
+We will use the following R packages during today's activity.
+
+```{r, message = FALSE, warning = FALSE}
+library(ggplot2)
+library(Lock5Data)
+```
+
+---
+
+For this activity, we'll use a dataset called `RestaurantTips` from the `Lock5Data` R package. The data was collected by the owner of a bistro in New York and contains 157 bills at the restaurant over a two week period. Let's explore the relationship between the size of the bill, called `Bill`, and the size of the tip, called `Tip`. Both variables are measured in dollars.
+
+I'm going to read the data into R and call it `tips` to shorten the name a bit.
+
+```{r}
+tips <- RestaurantTips
+```
+
+
+1. Suppose we want to create a scatterplot comparing the size of the bill and the tip size. Which variable should be the explanatory variable and which should be the response variable? Why?
+
+**Answer:**
+
+
+<br>
+
+2. Make a scatterplot comparing the bill size and the tip size. (Bonus: Consider adding a theme and making the labels nicer with `labs()`)
+
+```{r}
+
+```
+
+
+<br>
+
+3. What do you notice about the relationship between the two variables?
+
+**Answer:**
+
+
+<br>
+
+4. Let's use R to calculate a simple linear regression line for this data. Write the formula for the line after you run your R code. I've used R Markdown's math mode to show you how you can write the general formula. You will just need to replace $b_0$ and $b_1$ with the numbers from your equation. You could also replace y and x with the variable names if you'd like.
+
+```{r}
+
+```
+
+**Formula:** $\hat{y} = b_0 + b_1 * x$
+
+<br>
+
+5. Suppose you're a server at the restaurant and someone has just spent \$23.70 on a meal. How much would you predict their tip would be?
+
+```{r}
+
+```
+
+
+**Prediction =**
+
+<br>
+
+
+6. There was one person in the dataset who actually did have a bill of \$23.70. They left a \$10 tip. What would be the residual for that observation?
+
+```{r}
+
+```
+
+**Residual =**
+
+
+<br>
+
+7. Would it be a good idea to use this data to predict the tip size for a \$200 bill at this restaurant? Why or why not?
+
+**Answer:**
+
+
+<br>
+
+8. Would it be a good idea to use this data to predict the tip size for a \$20 bill at The Root here in Elon? Why or why not?
+
+**Answer:**
+
+
+<br>
+
+9. You can  add a simple linear regression line to your scatterplot by adding `geom_smooth(method = "lm", se = FALSE)` as another layer to your ggplot object. Try this out below. Can you find the observation whose residual we just calculated on the graph? (Note: You will need to respecify your x and y aesthetics in `geom_smooth()` or move them to the `ggplot()` function instead.)
+
+```{r}
+
+```
+
+
+
+<br>
+
+10. Interpret the estimated y-intercept in context of this problem. Is this an extrapolation or an interpolation?
+
+**Interpretation of y-intercept:**
+
+<br>
+
+11. Interpret the estimated slope in context of this problem.
+
+**Interpretation of slope:**
+
+
+<br>
+
+12. Does your estimated slope make sense based on what you know about tipping?
+
+**Answer:**
+
+
+<br>
+
+13. Use the `summary()` function on the object created by the `lm()` function. Find the R-squared value in the output and write a sentence interpreting it.
+
+```{r}
+
+```
+
+**R-squared =**
+
+**Interpretation:**
+
+
+---
+
+Bonus: Investigate how well the size of the bill can help predict the tip percentage (`PctTip`).
+
+* Make a scatterplot. What is the relationship between the two variables? How does it compare to what we saw when we compared bill size to tip size (both in terms of dollars).
+
+
+* Calculate a simple linear regression line and interpret the estimated intercept and estimated slope.
