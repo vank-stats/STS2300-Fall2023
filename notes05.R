@@ -37,3 +37,40 @@ ggplot(majors, aes(y = Major, x = Count)) +
   geom_boxplot(fill = "gold", color = "maroon", alpha = .5) +
   geom_point() +
   scale_y_discrete(limits = c("Math", "Applied_Math", "Data_Analytics", "Stats"))
+
+
+
+
+# Combining Graphs
+
+library(patchwork)
+
+A <- ggplot(penguins, aes(x = bill_length_mm)) +
+  geom_histogram(binwidth = 5, color = "white")
+B <- ggplot(penguins, aes(x = bill_depth_mm)) +
+  geom_histogram(binwidth = 2, color = "white")
+C <- ggplot(penguins, aes(x = body_mass_g, y = species)) +
+  geom_boxplot(aes(fill = species), 
+               show.legend = FALSE)
+
+# Three graphs side-by-side
+
+A + B + C
+
+# Three graphs on top of one another
+
+A / B / C
+
+# Two graphs side-by-side above a third graph
+
+(A + B) / C
+
+# Adding overall title / subtitle / caption to the group of graphs
+
+(A + B) / C +
+  plot_annotation(title = "My Three Penguin Graphs",
+                  subtitle = "Two histograms and side-by-side boxplots",
+                  caption = "Made with the patchwork package")
+
+
+(A + labs(title = "Graph A")) + B / (C + labs(title = "Graph C"))
