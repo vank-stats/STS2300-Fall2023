@@ -82,7 +82,8 @@ hedgehog_sum <- hedgehogs %>%
   add_row(Month = 1:3, 
           Sex = "Female") %>%
   complete(Month, Sex) %>% 
-  replace_na(list(Number = 0)) %>%
+#  replace_na(list(Number = 0)) %>%  This line is incorrect, correct line added
+  replace_na(list(count = 0)) %>%
   arrange(Sex, Month)
 
 
