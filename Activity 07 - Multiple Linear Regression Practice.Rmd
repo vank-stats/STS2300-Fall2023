@@ -1,0 +1,139 @@
+---
+title: "Activity 07 - Multiple Linear Regression Practice"
+author: "STS 2300 (Dr. VanKrevelen)"
+date: 'Updated: 9/21/2023'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+
+We will use the following R packages during today's activity.
+
+```{r, message = FALSE, warning = FALSE}
+library(ggplot2)
+library(dplyr)
+library(moderndive)
+```
+
+---
+
+For this activity, we'll use a dataset called `mario_kart_auction` from the `modenrndive` R package. The data frame includes information from 143 eBay auctions for the Nintendo Wii game Mario Kart. Our goal is to predict the total price at the end of the auction (`total_pr`).
+
+We will consider the following variables as possible variables to help us make our prediction:
+
+  - `duration` - auction length
+  - `start_pr` - starting price for the auction
+  - `ship_pr` - amount listed for shipping price
+  - `seller_rate` - seller's eBay rating
+  - `wheels` - number of Wii wheels included with the game in the auction
+
+
+1. Make a graph to explore the distribution of the response variable. What do you notice?
+
+```{r}
+
+```
+
+**Answer:** 
+
+<br>
+
+
+2. Outliers can have a **BIG** impact on regression analyses. While we don't know why those two auction values were so high, it seems pretty obvious that there was something different happening in them than in other auctions. Try creating a new data frame called `mario` that removes those two values. Then re-graph the response variable.
+
+```{r}
+
+```
+
+<br>
+
+
+3. Let's use R to create a multiple linear regression model with your new data frame that will predict `total_pr` using all of the possible explanatory variables listed at the top of this activity (`duration`, `start_pr`, `ship_pr`, `seller_rate`, and `wheels`). Use the `summary()` function to better explore the results. Are there any variables that we may want to remove? Why?
+
+```{r}
+
+```
+
+**Answer:**
+
+<br>
+
+
+4. After using backward selection to arrive at a final model, what is your equation? Fill in the equation below for this model.
+
+```{r}
+
+```
+
+$$\widehat{totalprice} = ...$$
+
+<br>
+
+
+5. Write a sentence interpreting the y-intercept of your model in context of this example. Does the interpretation make sense in this context? (Note: Remember we need to add a bit more for multiple linear regression interpretations.)
+
+**Interpretation:**
+
+<br>
+
+
+6. Write a sentence interpreting the slope for the `start_pr` variable in context of this example. Remember to consider what the units are for this example.(Note: Remember we need to add a bit more for multiple linear regression interpretations.)
+
+**Interpretation:**
+
+<br>
+
+
+7. Write a sentence interpreting the slope for the `duration` variable in context of this example. Remember to consider what the units are for this example.(Note: Remember we need to add a bit more for multiple linear regression interpretations.)
+
+**Interpretation:**
+
+<br>
+
+
+8. Does it make sense to say that an eBay seller should set the duration as short as possible to make more money? Why or why not?
+
+**Answer:**
+
+<br>
+
+
+9. Calculate the predicted price for a 7 day auction with a starting price of \$25, a seller rating of 3085, and 1 wheel included.
+
+```{r}
+
+```
+
+**Prediction = **
+
+<br>
+
+
+10. There was an auction in our data that matches the prediction above. It had a total price of \$40.70. What is the residual for this value?
+
+```{r}
+
+```
+
+**Residual = **
+
+<br>
+
+
+11. What is the $R^2$ for our model? Write a sentence interpreting it in context.
+
+```{r}
+
+```
+
+**$R^2$ = **
+
+**Interpretation:**
+
+<br>
+
