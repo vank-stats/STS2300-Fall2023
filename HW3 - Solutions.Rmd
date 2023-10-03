@@ -1,0 +1,242 @@
+---
+title: "Homework 3 (50 points total)"
+author: "Solutions"
+date: 'Due: 10/2/2023'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+
+# Note About Answering Homework and Exam Questions With New Approaches
+
+**There are multiple ways to accomplish the tasks described in this homework assignment. If you use methods that we did not discuss in class (e.g. notes, activities, questions during class), you should explain where you learned your method and how it is accomplishing the task. For example, it's possible to subset data using "square bracket" notation. If I did this, I would say how I learned about it and why the code I used successfully subsets the data in the way I want**
+
+---
+
+Use the code chunk below to load any R libraries that you use in your script. I've added `dplyr`, `ggplot2`, and `patchwork` as a start.
+
+```{r, message = FALSE}
+library(dplyr)
+library(ggplot2)
+library(patchwork)
+library(tidyr) # used for the replace_na() function in question 2
+library(moderndive)
+```
+
+---
+
+# Graphing - Hedgehogs (23 points total)
+
+```{r, out.width = '50%', fig.align = 'center', echo = FALSE, fig.cap = 'European Hedgehogs [Image Source](https://commons.wikimedia.org/wiki/File:European_Hedgehog_Mother_and_Child.jpg)'}
+knitr::include_graphics('https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/European_Hedgehog_Mother_and_Child.jpg/1600px-European_Hedgehog_Mother_and_Child.jpg?20110817144558')
+```
+
+A [recent study](https://www.mdpi.com/2076-2615/13/4/626#) looked at lifespans and causes of death of European Hedgehogs. The authors of the paper appear to have created their graphs using `ggplot2`. You will be recreating each of the three graphs in this image and then eventually putting them together like the authors did.
+
+```{r, fig.align = 'center', echo = FALSE, fig.cap = 'Article graphs [Viewable online here](https://www.mdpi.com/animals/animals-13-00626/article_deploy/html/images/animals-13-00626-g003.png)'}
+knitr::include_graphics('https://www.mdpi.com/animals/animals-13-00626/article_deploy/html/images/animals-13-00626-g003-550.jpg')
+```
+
+The code below will read the author's dataset into R, create a variable telling us whether or not a hedgehog was found as roadkill, and remove hedgehogs with missing information about their sex. 
+
+```{r}
+hedgehogs <- read.csv("https://raw.githubusercontent.com/vank-stats/STS2300-Fall2023/main/hedgehogs.csv") %>%
+  filter(Sex != "Unknown") %>%
+  mutate(TrafficDeath = (Cause == "Roadkill"))
+```
+
+<br>
+
+
+1. (7 points) Use the data to create **graph B**. Pay attention to each of the following when making your graph:
+
+  - Title, axis, and legend labels (the legend name has a space in it, and y-axis label is capitalized)
+  - Graph theme (this is a pre-made theme, not one you need to customize)
+  - Bar color and variable it is associated with (it's ok if your colors aren't exactly the same but make them somewhat close)
+
+```{r}
+B <- ggplot(hedgehogs, aes(x = Sex, fill = TrafficDeath)) +
+  geom_bar() +
+  theme_classic() +
+  labs(title = "B - Deaths by sex and cause",
+       fill = "Traffic Death", y = "Count") +
+  scale_fill_manual(values = c("darkgreen", "darkorange3"))
+B
+```
+
+
+<br>
+
+
+2. (7 points) I've written code to summarize the data for you. Use this summarized data to create **graph A**. Pay attention to each of the following when making your graph:
+
+  - Two geoms are used, one that we use for scatterplots plus a new one (`geom_line()`)
+  - Title, axis, and legend labels
+  - Graph theme (same as before)
+  - You will need to adjust which values show up on the x axis (i.e. all 12 months)
+  - You will need to adjust how far the y-axis goes (Hint: use a similar function from your x-axis change but try the `limits` argument)
+  
+```{r}
+hedgehog_sum <- hedgehogs %>%
+  summarize(count = n(), 
+            .by = c(Month, Sex)) %>%
+  add_row(Month = 1:3, 
+          Sex = "Female") %>%
+  complete(Month, Sex) %>% 
+#  replace_na(list(Number = 0)) %>%  This line is incorrect, correct line added
+  replace_na(list(count = 0)) %>%
+  arrange(Sex, Month)
+
+A <- ggplot(hedgehog_sum, aes(x = Month, y = count, color = Sex)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() +
+  labs(title = "A - Deaths by sex and month",
+       color = "",
+       y = "Number") +
+  scale_x_continuous(breaks = 1:12) +
+  scale_y_continuous(limits = c(0, 50))
+A
+```
+
+
+<br>
+
+
+3. (7 points) Now let's create **graph C**. I've written code that summarizes the data in a slightly different format to allow you to create this graph. Pay attention to each of the following when making your graph:
+
+  - Title and axis labels
+  - Graph theme (same as before)
+  - The legend was removed (Hint: we saw an example of this in Notes 5)
+  - The two graphs are split over the values of the `TrafficDeath` variable
+  - [This page](https://r-graphics.org/recipe-facet-label-text) includes information on how you can change the labels above the two graphs
+  
+```{r}
+hedgehog_sum2 <- hedgehogs %>%
+  summarize(count = n(), 
+            .by = c(Month, Sex, TrafficDeath)) %>%
+  add_row(Month = 1:3, 
+          Sex = "Female", 
+          TrafficDeath = TRUE) %>%
+  complete(Month, Sex, TrafficDeath) %>% 
+  replace_na(list(count = 0)) %>%
+  arrange(Sex, Month, TrafficDeath)
+
+hedgehog_sum2 <- hedgehog_sum2 %>%
+  mutate(TrafficDeath = as.character(TrafficDeath),
+         TrafficDeath = recode(TrafficDeath, 
+                               "FALSE" = "Non-traffic death",
+                               "TRUE" = "Traffic death"))
+
+C <- ggplot(hedgehog_sum2, aes(x = Month, y = count, color = Sex)) +
+  geom_point(show.legend = FALSE) +
+  geom_line(show.legend = FALSE) +
+  theme_classic() +
+  labs(title = "C - Traffic deaths by month and sex") +
+  facet_wrap(~ TrafficDeath) +
+  scale_x_continuous(breaks = 1:12)
+C
+```
+
+
+<br>
+
+
+4. (2 points) Lastly, use the `patchwork` library to put all three graphs together like we see in the image above. Congrats, you can make graphs that are used in published scientific research!
+
+```{r}
+A / (B + C)
+```
+
+
+
+---
+
+
+
+# SLR - Amazon Prices (24 points total)
+
+In this section, you will use the `amazon_books` data set from the `moderndive` package. Add code to load the package with the other packages at the top of this script.
+
+5. (2 points) Suppose we wish to predict the price of books on Amazon using their list price. Which variable is the explanatory variable and which variable is the response variable?
+
+**Answer:** The list price is the explanatory variable. It helps us predict the response variable of Amazon price.
+
+<br>
+
+
+6. (4 points) Create a scatterplot for the question above that includes the simple linear regression line on it. Describe the general pattern you see in the data.
+
+```{r}
+ggplot(amazon_books, aes(x = list_price, y = amazon_price)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  theme_bw()
+```
+
+**Answer:** There is a fairly strong linear relationship between the two variables. As list price increases, the price on Amazon tends to increase as well. The points tend to fall pretty close to the regression line.
+
+<br>
+
+
+7. (3 points) Use R to determine the equation for the simple linear regression line. Write the equation in the space below your code.
+
+```{r}
+price.lm <- amazon_books %>%
+  lm(amazon_price ~ list_price, data = .)
+price.lm
+```
+
+**Equation:** $\widehat{amazon\_price} = -2.407 + 0.8298 * list\_price$
+
+<br>
+
+
+8. (4 points) Use your line to predict the Amazon price of books with list prices of \$10, \$50, and \$200. Are any of these considered outliers? Why or why not?
+
+```{r}
+price.lm %>%
+  predict(newdata = data.frame(list_price = c(10, 50, 200)))
+```
+
+**Answer:** We predict Amazon prices of \$5.89, \$39.08, and \$163.55 respectively. There are no list prices as high as \$200 in the data, so that prediction would be considered an outlier.
+
+<br>
+
+
+9. (4 points) Write a sentence interpreting the slope in context.
+
+**Answer:** The predicted book price on Amazon increases by around 83 cents for every one dollar increase in the list price.
+
+<br>
+
+
+10. (4 points) Write a sentence interpreting the y-intercept in context.
+
+**Answer:** The predicted book price on Amazon is -\$2.41 for a book with a list price of \$0. This prediction is an outlier since no book would have a list price of \$0. The prediction also clearly does not make sense since it would mean Amazon is paying people to buy the book.
+
+<br>
+
+
+11. (4 points) Calculate the $R^2$ value and write a sentence interpreting it in context.
+
+```{r}
+summary(price.lm)
+```
+
+**Answer:** $R^2$ is 0.9031. This means that around 90% of the variability in Amazon book prices can be explained by the list price of the books.
+
+
+
+---
+
+# Reflection (2 points)
+
+11. Answer one or both of the following: What's something you're looking forward to doing/trying on the project? What's something you're worried or unsure about doing/trying on the project?
+
+**Answer:** Answers will vary
