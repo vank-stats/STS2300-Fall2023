@@ -1,0 +1,214 @@
+---
+title: "STS 2300 - Exam 2"
+author: "Put Your Name Here"
+date: '10/06/2023'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+
+During this exam, you are allowed to use your notes and other resources (e.g. our Moodle page, Google). You are **NOT allowed** to discuss the exam with anyone else (including but not limited to classmates, tutors, online message boards, through social media, using shared notes with someone else, etc.) until after everyone has completed the exam. Any violation of these rules will be considered a violation of the Elon Honor Code and will be handled as such. Type your name below to acknowledge your acceptance of these rules. If you have *any* questions, please be sure to ask Dr. V to get clarification.
+
+Enter your name in the space below to acknowledge your agreement to these guidelines.
+
+> I, **YOUR NAME HERE**, have read and understand the rules above. I agree to follow these rules for the exam and accept that not abiding by these rules will be treated as a violation of Elon's Honor Code.
+
+---
+
+Use this space to load any R libraries that you use in your script. I've added `dplyr`, `ggplot2`, and `Sleuth3` packages to start.
+
+```{r, message = FALSE}
+library(dplyr)
+library(ggplot2)
+library(Sleuth3)
+```
+
+---
+
+# Part 1 - Graphing NC School Testing Data (28 points total)
+
+On exam 1, we used a file called **NC_School_Test_Data.csv**. We will be revisiting this data. Since the focus of this exam is not reading data into R, I've added code below that will read it into R using a URL. The code will also create two versions of the data that will be helpful for graphs you are asked to make. Consider which data frame is structured in a way to be useful for each of the graphs you will need to create.
+
+```{r}
+schools <- read.csv("https://raw.githubusercontent.com/vank-stats/STS2720-Fall2021/main/NC_School_Test_Data.csv")
+
+schools_filtered <- schools %>%
+  filter(PerformanceGrade %in% c("A", "B", "C", "D", "F"),
+         GrowthMeasure != "",
+         District %in% c("Alamance-Burlington Schools",
+                         "Caswell County Schools",
+                         "Guilford County Schools"))
+
+district_summary <- schools %>%
+  filter(PerformanceGrade %in% c("A", "B", "C", "D", "F"),
+         GrowthMeasure != "") %>%
+  summarize(met_expect = sum(GrowthMeasure != "Not Met"),
+            passing = sum(PerformanceGrade != "F"),
+            .by = District)
+```
+
+<br>
+
+
+
+1. (12 points) There is a picture of some graphs on our Moodle page below the exam2.Rmd file. Recreate the top graph to the best of your ability. Pay special attention to the following:
+
+    - Titles and axis labels
+    - Graph theme (this is a pre-made theme, not one you need to custom create)
+    - Point color and transparency
+    - Best-fit line and the color of the line
+  
+Make sure your graph is displayed in the knitted file. (Note: You do not need to change the dimensions to match the stretched out version. This will come later.)
+
+```{r}
+
+```
+
+<br>
+
+
+
+2. (12 points) Recreate the three graphs at the bottom of the picture on our Moodle page to the best of your ability. Pay special attention to the following:
+
+    - Axis and legend labels
+    - Graph theme (this is a pre-made theme)
+    - Bar color and lines around the bars
+    - Each of three school districts has their own section of the graph
+  
+```{r}
+
+```
+
+Make sure your graph is displayed in the knitted file.
+
+<br>
+
+
+
+3. (4 points) Put your graphs from #1 and #2 together into a single image like the picture on the Moodle page. Display it below your code in your knitted file.
+
+```{r}
+
+```
+
+<br>
+
+
+
+---
+
+# Part 2 - Predicting Country Life Expectancy (62 points total)
+
+The `Sleuth3` package includes a data frame called `case1201`. You will use this data frame to answer the questions in Part 2. The data frame includes information on average SAT scores for each of the US states (in 1982) along with related variables. We will consider the following variables:
+
+  - `SAT` - state average SAT score
+  - `Takers` - percentage of high school seniors who took the SAT
+  - `Income` - median income for families of the test-takers (in hundreds of dollars)
+  - `Public` - percentage of the test-takers who attended public schools
+  - `Expend` - total state spending on secondary schools (in hundreds of dollars)
+
+<br>
+
+
+
+4. (8 points) We want to create a multiple linear regression model that predicts `SAT` using the other four variables. Write code to generate an appropriate model including all five variables. Explain how we can decide if any variables should be removed from this model. If they should be, explain which variable you would remove first and why. (Note: You don't need to actually remove the variable in this step. That will come in the next question.)
+
+```{r}
+
+```
+
+**Answer:**
+
+<br>
+
+
+5. (10 points) Use backward elimination to arrive at a final multiple linear regression model. Include the code to generate the equation for your model. Add the equation to the .Rmd file below your code, and then explain why this is your "final" model. (In other words, why aren't you removing any additional variables?)
+
+$$\widehat{something} = ...$$
+
+**Explanation:**
+
+<br>
+
+
+6. (8 points) The code below lists North Carolina's row in the data. Use this to determine the residual value for North Carolina's observation. Explain how you calculated this and determined this was the residual.
+
+```{r}
+filter(case1201, State == "NorthCarolina")
+```
+
+**Residual = **
+
+**Explanation:**
+
+<br>
+
+
+7. (12 points) Suppose North Carolina officials plan to use your equation to make a prediction for the state average SAT score *this year*. They believe that: 
+
+    - 27% of seniors will take the SAT (`Takers`),
+    - the median income is 566 hundred dollars (`Income`), 
+    - that 88% of test takers will attend public schools (`Public`),
+    - and that 12.3 hundred dollars will be spent per student (`Expend`)
+
+Use these values to make a prediction. Then explain whether we should feel confident in this prediction or whether there are reasons to question its usefulness. Justify your answer.
+
+```{r}
+
+```
+
+**Prediction = **
+
+**Answer:**
+
+<br>
+
+
+8. (6 points) Write a sentence interpreting the y-intercept of your equation in context of this example. Be sure to address whether or not this is a reasonable interpretation (and why) or if we should be wary of taking it too literally.
+
+**Interpretation:**
+
+<br>
+
+
+9. (10 points) Write a sentence interpreting any two of the slope values in your final model in context of this example.
+
+**Slope 1 Interpretation:**
+
+**Slope 2 Interpretation:**
+
+<br>
+
+
+10. (8 points) Identify the coefficient of determination ($R^2$) for your model and write a sentence interpreting it in context of this example.
+
+```{r}
+
+```
+
+**Interpretation: **
+
+<br>
+
+
+---
+
+# Part 3 - Short Answer (10 points total)
+
+11. (5 points) What's something you learned how to do while making your activity 5 graph? Briefly explain how you accomplished that thing in your code. (e.g. what functions or arguments were used?)
+
+**Answer:**
+
+<br>
+
+
+12. (5 points) What always happens to the $R^2$ value as we add more variables to a multiple linear regression model? What can we use instead to judge the strength of our model?
+
+**Answer:**
+
+<br>
