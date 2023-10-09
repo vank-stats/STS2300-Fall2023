@@ -1,0 +1,152 @@
+---
+title: "Activity 08 - Sampling and Bootstrap Distributions"
+author: "STS 2300 (Dr. VanKrevelen)"
+date: 'Updated: 10/8/2023'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+
+We will use the following R packages during today's activity.
+
+```{r, message = FALSE, warning = FALSE}
+library(ggplot2)
+library(dplyr)
+library(Lock5Data)
+library(moderndive)
+library(patchwork)
+```
+
+---
+
+In Notes 8, we used a data set of party affiliation in the House of Representatives to explore the idea of bootstrap distributions (and how those compared to things like sampling distributions, distributions for a sample, and distributions for a population). In that example, our population (and sample) consisted of categorical data and our sampling and bootstrap distributions were for sample proportions. In this activity, let's look at a similar example where we start with quantitative data.
+
+<br>
+
+1. Let's use the `AllCountries` data set from the `Lock5Data` package. This will be our population since it includes data from all countries of the world. Make a histogram of the `Rural` variable. Consider setting `binwidth` to a reasonable value and setting `boundary` to 0. Give your graph a title that indicates this is the distribution of our population.
+
+```{r, warning = FALSE, out.width = "60%"}
+mu <- mean(AllCountries$Rural, na.rm = TRUE)
+
+pop_dist <- ggplot(AllCountries, aes(x = Rural)) +
+  geom_histogram(binwidth = 10,
+                 boundary = 0,
+                 color = "orange") +
+  geom_vline(xintercept = mu, color = "violet") +
+  labs(title = "Population: Percentage of each country living in rural areas",
+       caption = "Purple line is population mean") +
+  theme_classic()
+pop_dist
+```
+
+<br>
+
+
+2. Now let's take a random sample of 50 countries from the population. You can use the `rep_sample_n()` function from the `moderndive` package to do this. Store your sample in an object called `mysample`. Then create a histogram of the `Rural` variable in your sample. Use the same `binwidth` and `boundary` arguments as your graph of your population. Give this one a title indicating it is the distribution of your sample (Note: Remember that we want to use the `set.seed()` function before we use randomness in our code.)
+
+```{r}
+set.seed(101923)
+
+mysample <- rep_sample_n(AllCountries,
+                         size = 50)
+xbar <- mean(mysample$Rural, na.rm = TRUE)
+
+sample_dist <- ggplot(mysample, aes(x = Rural)) +
+  geom_histogram(binwidth = 10,
+                 boundary = 0,
+                 color = "orange") +
+  geom_vline(xintercept = xbar, color = "lightblue") +
+  labs(title = "Sample (n = 50): Percentage of each country living in rural areas",
+       caption = "Light blue line is sample mean") +
+  theme_classic()
+sample_dist
+```
+
+<br>
+
+
+3. What is similar and what is different between your two distributions thus far?
+
+**Answer:** Both graphs are showing us the distribution of individual countries (either all countries or a sample of 50 countries). Specifically, we are looking at the percentage of people in those countries who live in rural areas. The first graph is centered on the population mean while the second graph is centered on the sample mean.
+
+<br>
+
+
+4. Now let's approximate the sampling distribution for the sample mean by taking 1,000 random samples of size 50 from `AllCountries`. Then you will need to calculate the sample mean `Rural` value for each sample. Remember that you can do this using the `summarize()` function from the `dplyr` package. Store your result in an object called `sampling_dist`. 
+
+```{r}
+sampling_dist <- rep_sample_n(AllCountries,
+                              size = 50,
+                              reps = 1000) %>%
+  summarize(xbar_rural = mean(Rural, na.rm = TRUE))
+```
+
+<br>
+
+
+5. Create a histogram of your sampling distribution. Give it a title that indicates this is your sampling distribution. Does it make sense to use the same `bin_width` as before? Why or why not?
+
+```{r}
+sampling_distribution <- ggplot(sampling_dist, aes(x = xbar_rural)) +
+  geom_histogram(binwidth = 10,
+                 boundary = 0,
+                 color = "orange") +
+  geom_vline(xintercept = mu, color = "violet") +
+  labs(title = "Sampling Distribution (n = 50): Sample mean percentage in rural areas",
+       caption = "Purple line is population mean") +
+  theme_classic()
+sampling_distribution
+```
+
+**Answer:**
+
+<br>
+
+
+6. How does your sampling distribution compare to the two previous distributions? Why does it differ from those more than they differ from one another?
+
+**Answer:**
+
+<br>
+
+
+7. For our last distribution, we are going to make a bootstrap distribution from our sample we took in question 2 (object called `mysample`). Use the `rep_sample_n()` function to take 1,000 samples of size 50 from your original sample. Remember that we will need to take these samples **with replacement**, so you'll need to change the corresponding argument to do that. Calculate the sample mean `Rural` value for each of your bootstrap resamples and store them in an object called `boot_dist`.
+
+```{r}
+
+```
+
+<br>
+
+
+8. Create a histogram of your bootstrap distribution. Give it a title that indicates this is your bootstrap distribution. What is similar and different between your bootstrap and sampling distributions?
+
+```{r}
+
+```
+
+**Answer:**
+
+<br>
+
+
+9. Lastly, use the `patchwork` package to put these four graphs into a grid. Then briefly explain (i) what each graph shows, (ii) what value (population mean or sample mean) should be at/near the center of each graph, and (iii) whether their spread is closer to the population standard deviation of 24 or $\frac{24}{\sqrt{50}} = 3.4$.
+
+```{r}
+
+```
+
+**Distribution of the population:**
+
+**Distribution of the sample:**
+
+**Sampling distribution:**
+
+**Bootstrap resampling distribution:**
+
+
