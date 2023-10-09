@@ -26,7 +26,9 @@ pop_dist + labs(title = "House of Representatives Seats (Our Population)",
 
 
 # Taking a sample of 30 seats
+# Added a seed to make sure my results match the results in the notes
 
+set.seed(82720)
 mysamp <- rep_sample_n(house_of_reps, size = 30)
 
 
@@ -52,6 +54,9 @@ my1000samps_n30 <- house_of_reps %>%
 
 
 # Calculating a sample proportion for each of the 1,000 samples
+# Normally I would need to use .by = replicate inside summarize(),
+# but rep_sample_n() produces a grouped data frame, so the summarize()
+# function already knows to do the grouping for its calculations
 
 my1000phats_n30 <- my1000samps_n30 %>%
   summarize(prop_dem = mean(party == "Democratic"))
@@ -135,6 +140,11 @@ sd(phat_100$prop_dem)
 
 
 # Taking a bootstrap resample from my original sample
+
+# If you get an error creating myboot, try running this and doing it again
+# mysamp <- mysamp %>%
+#   ungroup() %>%
+#   select(-replicate)
 
 myboot <- mysamp %>%
   rep_sample_n(size = 30,
