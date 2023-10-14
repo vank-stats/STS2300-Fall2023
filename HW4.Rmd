@@ -1,0 +1,194 @@
+---
+title: "Homework 4 (50 points total)"
+author: "Put Your Name Here"
+date: 'Due: 10/25/2023'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+
+**As a reminder, there are often multiple ways to accomplish the tasks described in your homework assignments. If you use methods that we did not discuss in class (e.g. notes, activities, questions during class), you should explain where you learned your method and how it is accomplishing the task. For example, it's possible to subset data using "square bracket" notation. If I did this, I would say how I learned about it and why the code I used successfully subsets the data in the way I want**
+
+---
+
+Use the code chunk below to load any R libraries that you use in your script. I've added `dplyr` and `infer` as a start.
+
+```{r, message = FALSE}
+library(dplyr)
+library(infer)
+```
+
+---
+
+# Part 1 - Revisiting Hedgehogs - Roadkill proportion (21 points total)
+
+We are going to revisit the hedgehogs data set from our previous homework assignment. For the sake of the following questions, we will pretend that the data comes from a random sample of dead European hedgehogs (even though this is not the case).
+
+The code below will read the author's dataset into R, remove hedgehogs with missing information about their sex, and create a variable for whether or not they died in traffic (with values of "Yes" or "No"). 
+
+```{r}
+hedgehogs <- read.csv("https://raw.githubusercontent.com/vank-stats/STS2300-Fall2023/main/hedgehogs.csv") %>%
+  filter(Sex != "Unknown") %>%
+  mutate(TrafficDeath = ifelse(Cause == "Roadkill",
+                               "Yes",
+                               "No"))
+```
+
+<br>
+
+1. (2 points) Use R to find an estimate of the proportion of all hedgehogs that die from roadkill. Report your answer in the text below using proper notation.
+
+```{r}
+
+```
+
+**Estimate:** 
+
+<br>
+
+
+2. (4 points) Use the `infer` package to generate a bootstrap distribution of 1,000 sample proportions based on this data. Create a histogram of your distribution with your estimate from the previous question added to your graph. Don't forget to set a seed before your bootstrap distribution.
+
+```{r}
+
+```
+
+<br>
+
+
+3. (3 points) Describe important characteristics of your bootstrap distribution (e.g. shape, center, spread). Include why your estimate from the previous question shows up where it does on your graph.
+
+**Answer:**
+
+<br>
+
+
+4. (4 points) Generate a 95% confidence interval based on your bootstrap distribution using either the percentile method or the standard error method. Report the interval below using proper notation. Then explain how your chosen method creates confidence intervals as applied to this example. (Note: This does not mean to tell me what functions you used. Instead, you should briefly describe the process that creates the interval)
+
+```{r}
+
+```
+
+**Confidence interval:**
+
+**Explanation:**
+
+<br>
+
+
+5. (4 points) Write a sentence interpreting your confidence interval in context of this example.
+
+**Interpretation:**
+
+<br>
+
+
+6. (4 points) Suppose the researchers decided this confidence interval was too wide for them to effectively reach conclusions. What are two things they could do to reduce the width of their confidence interval? What is a downside to each?
+
+**Option 1:**
+
+**Option 2:**
+
+<br>
+
+
+---
+
+
+# Part 2 - Hedgehogs Cont. - Comparing Sexes (19 points)
+
+Suppose that now researchers are interested in whether male or female hedgehogs are more likely to die due to roadkill. 
+
+7. (4 points) Calculate an estimate for the difference in the proportion of female and male hedgehogs that die due to roadkill. Then write a sentence explaining what the number means in context of this example.
+
+```{r}
+
+```
+
+**Estimate:**
+
+**Interpretation:**
+
+<br>
+
+
+8. (4 points) Generate a boostrap resampling distribution of 1,000 sample differences in proportions. Make a histogram of these values. What does it mean that 0 is located where it is on your graph?
+
+```{r}
+
+```
+
+**Answer:**
+
+<br>
+
+
+9. (3 points) Calculate a 90% confidence interval for a difference in proportions. Use the opposite method that you used in Part 1 (e.g. if you used percentile method there, use standard error method here, and vice versa). Report the interval below.
+
+```{r}
+
+```
+
+**90% Confidence interval:**
+
+<br>
+
+
+10. (4 points) Write a sentence interpreting your confidence interval in context of this example.
+
+**Interpretation:**
+
+<br>
+
+
+11. (4 points) Can we be 90% confident that one sex dies by roadkill more often than the other? Why or why not?
+
+**Answer:**
+
+<br>
+
+
+---
+
+# Part 3 - Short Answer (8 points)
+
+12. (4 points) Calculate a theory-based confidence interval for either part 1 or part 2. Is your interval similar to the simulation-based one you previously calculated? Explain why it makes sense that this is the case.
+
+```{r}
+
+```
+
+**Explanation:**
+
+<br>
+
+
+13. (4 points) Explain the difference between a bootstrap distribution and a sampling distribution. Which quantity should be at the center of each and why?
+
+**Answer:**
+
+<br>
+
+
+---
+
+# Reflection (2 points)
+
+Answer one (or both of the following questions):
+
+14. (Option A) What's something from Unit 3 that isn't entirely clear to you and what would it take to help solidify your understanding of the concept?
+
+**Answer:**
+
+<br>
+
+
+14. (Option B) What's an example of how you've used confidence intervals in the past or envision using them in the future? What type of interval(s) did/will you use? What was/is the goal of using them in that context?
+
+**Answer:**
+
