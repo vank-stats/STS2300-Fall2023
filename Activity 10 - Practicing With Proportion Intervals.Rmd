@@ -1,0 +1,191 @@
+---
+title: "Activity 10 - Practicing With Proportion Intervals"
+author: "STS 2300 (Dr. VanKrevelen)"
+date: 'Updated: 10/17/2023'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message = FALSE}
+library(ggplot2)
+library(infer)
+library(dplyr)
+```
+
+For this activity, we'll look at a study where researchers trained a dog to smell COVID-19 virus. If you're interested, you can read more about it (and watch a video) [here](https://nerdist.com/article/dogs-sniff-out-covid/).
+
+```{r, out.width = '75%', fig.align = 'center', echo = FALSE, fig.cap = 'Sniffer dog at work'}
+knitr::include_graphics('https://legendary-digital-network-assets.s3.amazonaws.com/wp-content/uploads/2020/07/13030950/C19-sniffing-dogs-feature-image-07272020.jpg')
+```
+
+
+---
+
+
+# Part 1 - A single proportion
+
+1. I've created a data frame using the data mentioned in the article. Use the code below to read it into R. How many observations are there? What are the variables and what does each one mean?
+
+```{r}
+covid_dog <- data.frame(ID = c(rep("positive", 157), rep("negative", 792),
+                               rep("positive", 33), rep("negative", 30)),
+                        actual = c(rep("positive", 157), rep("negative", 792),
+                                   rep("negative", 33), rep("positive", 30))) %>%
+  mutate(correct = factor(ID == actual))
+```
+
+**Answer:**
+
+<br>
+
+
+2. Let's start by just looking at cases where the sample was actually positive for COVID-19. Use the `filter()` function to create a new object called `pos_samples` that only includes rows where the actual sample was positive.
+
+```{r}
+
+```
+
+<br>
+
+
+3. Create a bar graph comparing the number of positive samples that were correctly and incorrectly identified. Then calculate the proportion of positive tests the dog correctly identified. (Note: We've seen two ways to do this in the notes and there is a third possibility that uses the functions from the `infer` package without the `generate()` line.)
+
+```{r}
+
+```
+
+**Proportion correct:**
+
+<br>
+
+
+4. This was just one sample. What we're really interested in is how well this dog would do in the long run. What is our parameter of interest?
+
+**Answer:**
+
+<br>
+
+
+5. Generate a bootstrap distribution of 1,000 sample proportions. Create a histogram of your 1,000 sample proportions from this distribution. Since we're going to be using randomization, let's set a seed here so that we can reproduce our results in the future. I've gotten you started with the code below. When you're ready to run the code, change `eval = FALSE` to `eval = TRUE`.
+
+```{r, eval = FALSE}
+set.seed(101823)
+pos_boot <- ____ %>%
+  specify(formula = ____ ~ NULL, success = "____") %>%
+  generate(reps = 1000, type = "bootstrap") %>%
+  calculate(stat = "____")
+visualize(____)
+```
+
+
+<br>
+
+
+6. Create a 95% confidence interval using either the standard error method or the percentile method. Write the interval below.
+
+```{r}
+
+```
+
+**95% CI:**
+
+<br>
+
+
+7. Provide a sentence interpreting your interval in context of this example.
+
+**Interpretation:**
+
+<br>
+
+
+8. Suppose we wanted a narrower interval than the one we got. How could we achieve that?
+
+**Answer:**
+
+<br>
+
+
+---
+
+# Part 2- Comparing proportions
+
+9. Now let's consider whether the dog does a better job identifying positive or negative specimens. To start, let's make another bar graph comparing the two groups in our sample. To do this, your x-axis will represent our two groups (positive and negative specimens), and you will fill in the bars based on whether or not the dog got the correct ID. Try running the graph with and without `position = fill` in `geom_bar()` to see what that argument does.
+
+```{r}
+
+```
+
+<br>
+
+
+10. What does the graph show? What does `position = fill` do and why might we want to include it here?
+
+**Answer:**
+
+<br>
+
+
+11. Clearly the dog didn't do equally well with positive and negative cases in our *sample*, but we want to apply this to a *population.* What is our parameter of interest? Put it in context of this problem.
+
+**Answer:**
+
+<br>
+
+
+12. Let's calculate our point estimate. We can use the `infer` package to do this and just skip the `generate()` step. Write a sentence explaining what the output of this code represents for our example.
+
+```{r}
+dog_pointest <- covid_dog %>%
+  specify(formula = correct ~ actual, success = "TRUE") %>%
+  calculate(stat = "diff in props", order = c("negative", "positive"))
+dog_pointest
+```
+
+**Answer:**
+
+<br>
+
+
+13. Now we need to generate a bootstrap distribution to better understand how this estimate might vary from sample to sample. You can copy and paste your code from above but change `dog_pointest` to a new name and add a `generate()` line in between `specify()` and `calculate()`. Make a histogram of your sample proportions from this distribution. What do you notice about the histogram?
+
+```{r}
+
+```
+
+**Answer:**
+
+<br>
+
+
+14. Generate a 95% confidence interval based on this bootstrap distribution. Write your interval below. The interval you get *should* contain only positive numbers. Explain what that means in the context of this example. (Note: You don't have to write a full interpretation of the interval yet. That will come in the next question.)
+
+```{r}
+
+```
+
+**95% CI:**
+
+<br>
+
+
+15. Interpret the interval in context of the problem. Consider writing the sentence so that it could be included in the article linked at the top of the page and be understood by someone reading that article.
+
+(Reminder: When talking about a difference in percentages, we use "percentage points")
+
+**Answer:**
+
+<br>
+
+
+16. The article mentioned the dog might be able to be used at airports or other locations to determine if someone has COVID-19. What might we need to consider about the applicability of these results outside the context of the experiment? (Note: It might help to read how the dog was tested or to watch the short video)
+
+**Answer:**
+
+<br>
