@@ -1,0 +1,180 @@
+---
+title: "Activity 11 - Confidence Intervals for Means"
+author: "STS 2300 (Dr. VanKrevelen)"
+date: 'Updated: 10/19/2023'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Below are the packages you will need for this activity. If you use other packages, you can add them here.
+
+```{r, message = FALSE}
+library(ggplot2)
+library(infer)
+library(dplyr)
+```
+
+A study looked at the effect that fidget spinners have on attention and memory. You can read an article about it [here](https://www.psypost.org/2019/11/study-finds-using-a-fidget-spinner-can-impair-memory-and-attention-54904) or can look at the research paper [here](https://onlinelibrary.wiley.com/doi/full/10.1002/acp.3610) if you're interested.
+
+
+# Looking at the data
+
+1. There is a data file on Moodle called **fidget_spinners.csv** that contains data from the experiment mentioned above. The code below will read the data into R directly from a URL or you can download the file and read it in from your hard drive for practice. Describe the variables in the data.
+
+```{r}
+fidget <- read.csv("https://raw.githubusercontent.com/vank-stats/STS2300-Fall2023/main/fidget_spinners.csv")
+```
+
+**Description of variables:**
+
+<br>
+
+---
+
+
+# Part 1 - A single mean
+
+2. Let's start by investigating the people in the "No Spinner" group. These people will function like a control group. Use the `filter()` function to create an object called `control` that only contains these participants. Then make a graph of the `MemoryScore` variable for people in this group. Describe what the graph shows.
+
+```{r}
+
+```
+
+**Graph description:**
+
+<br>
+
+
+3. Suppose we are interested in the population mean memory score for people not using a fidget spinner. Calculate our best estimate for this number.
+
+```{r}
+
+```
+
+**Estimate:**
+
+<br>
+
+
+4. Let's create a bootstrap distribution of 1,000 sample means to get a better sense as to how much our estimate would vary from sample to sample. Make a histogram of your bootstrap sample means. (Note: The `set.seed()` line will ensure we get the same result each time we knit our document. You should replace the number with a number of your choosing.)
+
+```{r}
+set.seed(200925)
+
+```
+
+<br>
+
+
+5. Describe the histogram you created in the previous example (e.g. shape, center, spread).
+
+**Histogram description:**
+
+<br>
+
+
+6. Create a 90% confidence interval using your bootstrap distribution and write it below.
+
+```{r}
+
+```
+
+**CI:**
+
+<br>
+
+
+7. Provide an interpretation of this interval in context of the example.
+
+**Interpretation:**
+
+<br>
+
+
+---
+
+
+# Part 2 - A difference in means
+
+8. Ultimately, the researchers wanted to know how memory might differ between people using and not using the fidget spinner. Create a new object called `fidget_compare` that contains the "No Spinner" and the "Spinner" groups. (Note: There is a third group called "Spinner Present". You can use `!=` to get rid of that group.)
+
+```{r}
+
+```
+
+<br>
+
+
+9. What type of graph might we use to compare the memory scores of the two groups? Make one below and describe what it shows. (Note: This is based on the data itself, *not* on any sort of bootstrap distribution yet.)
+
+```{r}
+
+```
+
+**Graph description:**
+
+<br>
+
+
+10. Calculate a difference in sample mean memory scores between the two groups. Use "No Spinner" - "Spinner" as the order of subtraction. Write a sentence about what the value you get means in context of this example.
+
+```{r}
+
+```
+
+**Sentence:**
+
+<br>
+
+
+11. Generate a bootstrap distribution to better understand sampling variability in your estimate. Make a histogram of this distribution and comment on what you see. (Note: The `set.seed()` line will ensure we get the same result each time we knit our document. You should replace the number with a number of your choosing.)
+
+```{r}
+set.seed(92520)
+
+```
+
+**Comments:**
+
+<br>
+
+
+12. Calculate a confidence interval for the difference in population means using your bootstrap distribution. Write your interval below. (Note: I didn't specify a confidence level, so you can choose one)
+
+```{r}
+
+```
+
+**CI:**
+
+<br>
+
+
+13. Provide an interpretation of your confidence interval in context of this example. Additionally, consider whether it seem like fidget spinners help (or hurt) memory on average?
+
+**Interpretation:**
+
+<br>
+
+
+# Part 3 - Wrapping Up
+
+14. How broadly might we be able to (or not be able to) apply these conclusions? Consider some of the other variables in the study as well as how the study was conducted. (Also do you think this was a random sample? Why or why not?)
+
+**Answer:**
+
+<br>
+
+
+15. For practice, create the theory-based interval version of your two intervals from this activity. You should get answers similar to your bootstrap distribution based intervals.
+
+```{r}
+
+```
+
