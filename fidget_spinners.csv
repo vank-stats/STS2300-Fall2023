@@ -1,0 +1,99 @@
+Participant,AttentionScore,MemoryScore,MemoryProportion,Condition,Age,Gender
+6,4.666666667,8,0.4,No Spinner,19,m
+7,4.333333333,0,0,No Spinner,19,f
+8,4.666666667,2,0.1,No Spinner,19,f
+14,2.333333333,7,0.35,No Spinner,19,m
+15,2.666666667,10,0.5,No Spinner,20,f
+16,4.333333333,0,0,No Spinner,22,f
+17,2.333333333,5,0.25,No Spinner,18,m
+18,3.666666667,6,0.3,No Spinner,21,m
+19,3,14,0.7,No Spinner,22,m
+20,2.333333333,10,0.5,No Spinner,19,f
+21,3.666666667,12,0.6,No Spinner,18,m
+33,4,1,0.05,No Spinner,19,f
+34,3.666666667,6,0.3,No Spinner,19,f
+35,2.666666667,8,0.4,No Spinner,21,m
+36,3.333333333,5,0.25,No Spinner,18,f
+46,5,6,0.3,No Spinner,21,f
+47,2.666666667,3,0.15,No Spinner,20,f
+48,2,13,0.65,No Spinner,19,f
+49,4.666666667,6,0.3,No Spinner,19,f
+50,4,2,0.1,No Spinner,21,f
+51,3.333333333,3,0.15,No Spinner,24,f
+68,3.333333333,10,0.5,No Spinner,19,f
+69,2.333333333,4,0.2,No Spinner,20,f
+84,3.666666667,7,0.35,No Spinner,24,m
+85,3.333333333,7,0.35,No Spinner,21,f
+86,4.333333333,3,0.15,No Spinner,21,m
+87,2.333333333,0,0,No Spinner,19,f
+88,2.333333333,12,0.6,No Spinner,24,f
+89,3,5,0.25,No Spinner,18,f
+90,3,12,0.6,No Spinner,20,f
+91,1.333333333,17,0.85,No Spinner,19,m
+92,2.333333333,11,0.55,No Spinner,22,f
+2,3.666666667,3,0.15,Spinner,19,m
+3,4.333333333,5,0.25,Spinner,20,f
+9,3.666666667,1,0.05,Spinner,21,m
+10,5,2,0.1,Spinner,19,m
+22,4.333333333,1,0.05,Spinner,19,f
+25,4,2,0.1,Spinner,18,m
+26,2.666666667,15,0.75,Spinner,21,f
+29,2.333333333,11,0.55,Spinner,19,f
+30,3,3,0.15,Spinner,19,f
+38,3.333333333,1,0.05,Spinner,21,f
+40,2.333333333,3,0.15,Spinner,24,m
+42,3.666666667,0,0,Spinner,22,f
+44,3.333333333,0,0,Spinner,19,f
+45,3.666666667,4,0.2,Spinner,20,f
+54,4,2,0.1,Spinner,19,f
+55,2.333333333,4,0.2,Spinner,20,f
+56,2.666666667,6,0.3,Spinner,22,m
+59,4.666666667,1,0.05,Spinner,20,f
+60,3.333333333,4,0.2,Spinner,21,f
+63,4,3,0.15,Spinner,20,f
+67,1.666666667,9,0.45,Spinner,19,m
+70,4,9,0.45,Spinner,19,m
+72,3,8,0.4,Spinner,22,m
+76,4,2,0.1,Spinner,19,m
+78,4.333333333,1,0.05,Spinner,19,f
+79,3.666666667,0,0,Spinner,21,f
+81,2.666666667,8,0.4,Spinner,20,f
+82,3.333333333,4,0.2,Spinner,19,f
+83,3,8,0.4,Spinner,23,f
+94,2.666666667,2,0.1,Spinner,21,m
+96,3.333333333,1,0.05,Spinner,20,m
+97,3,0,0,Spinner,19,m
+98,3,2,0.1,Spinner,20,m
+1,2,1,0.05,Spinner Present,20,m
+4,2.333333333,4,0.2,Spinner Present,21,f
+5,2.666666667,1,0.05,Spinner Present,20,f
+11,4,5,0.25,Spinner Present,20,m
+12,2.333333333,16,0.8,Spinner Present,18,f
+13,2.333333333,8,0.4,Spinner Present,21,f
+23,3.666666667,10,0.5,Spinner Present,25,f
+24,3,2,0.1,Spinner Present,20,f
+27,3.333333333,1,0.05,Spinner Present,20,f
+28,3.666666667,9,0.45,Spinner Present,18,f
+31,4.333333333,2,0.1,Spinner Present,18,f
+32,2.666666667,7,0.35,Spinner Present,20,m
+37,2.333333333,12,0.6,Spinner Present,23,m
+39,2.333333333,6,0.3,Spinner Present,21,m
+41,3.333333333,5,0.25,Spinner Present,19,f
+43,3.333333333,2,0.1,Spinner Present,20,f
+52,4,2,0.1,Spinner Present,20,m
+53,2,11,0.55,Spinner Present,20,f
+57,2,10,0.5,Spinner Present,19,f
+58,3.666666667,12,0.6,Spinner Present,19,f
+61,2.333333333,4,0.2,Spinner Present,20,f
+62,2.333333333,2,0.1,Spinner Present,20,f
+64,3.666666667,3,0.15,Spinner Present,19,f
+65,4,3,0.15,Spinner Present,19,f
+66,3,3,0.15,Spinner Present,20,m
+71,2.333333333,6,0.3,Spinner Present,18,m
+73,4.333333333,5,0.25,Spinner Present,18,m
+74,1.333333333,13,0.65,Spinner Present,19,f
+75,3.666666667,6,0.3,Spinner Present,20,f
+77,4.333333333,2,0.1,Spinner Present,21,f
+80,3.333333333,11,0.55,Spinner Present,20,m
+93,2.333333333,5,0.25,Spinner Present,19,m
+95,2.333333333,4,0.2,Spinner Present,20,f
