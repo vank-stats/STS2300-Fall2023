@@ -1,0 +1,91 @@
+---
+title: "Confidence Interval Conditions"
+output: html_document
+date: "2023-10-23"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Conditions for all confidence intervals
+
+All confidence interval methods that we will cover only work when the data comes from a random sample of the population.
+
+The methods will then have other conditions that need to me met for them to work. These conditions will vary from parameter to parameter or between theory-based and bootstrap methods.
+
+# Theory-based method conditions
+
+## CI for p
+
+1. The data is a random sample from the population
+2. The sample size is "big enough" (one possible way to assess this is to check that you have at least 5 successes and 5 failures in your data)
+3. The sample isn't too much of the population (unless you use finite population correction)
+
+
+## CI for p1 - p2
+
+1. The data is a random sample from the population
+2. Both sample sizes are "big enough" (one possible way to assess this is to check that you have at least 5 successes and 5 failures in your data)
+3. Neither sample isn't too much of the population (unless you use finite population correction)
+
+
+## CI for mu
+
+1. The data is a random sample from the population
+2. The population is approximately normal (or our sample is "big enough")
+
+
+## CI for mu1 - mu2
+
+1. The data is a random sample from the population
+2. Both populations are approximately normal (or both samples are "big enough")
+3. (Depends on the version of the t-interval you use) The population variances are equal
+
+
+# Bootstrap conditions
+
+## SE Method
+
+1. The data is a random sample from the population
+2. The *bootstrap distribution* is approximately normal
+
+## Percentile Method
+
+1. The data is a random sample from the population
+
+This method works when the other methods work and potentially in additional cases unless some pretty weird things are going.
+
+
+# Example of when theory-based and SE methods wouldn't work
+
+Context: Someone has recorded whether or not it rained for each of 45 days. It rained on only one day and they want to make a confidence interval for the population proportion of days that it will rain there.
+
+Theory-based CI: We do not have at least 5 successes, so this method is not recommended.
+SE Method: The bootstrap distribution is skewed right, not bell-shaped, so this method is not recommended.
+Percentile method should still work
+
+```{r}
+library(infer)
+library(dplyr)
+
+rain <- data.frame(rained = c("yes", rep("no", 44)))
+
+set.seed(958)
+rain_boot <- rain %>%
+  specify(rained ~ NULL, success = "yes") %>%
+  generate(reps = 1000, type = "bootstrap") %>%
+  calculate(stat = "prop")
+visualize(rain_boot)
+
+rain_boot %>%
+  get_ci(type = "percentile")
+
+rain_boot %>%
+  get_ci(type = "se", point_estimate = 1/45)
+
+prop.test(x = 1, n = 45)$conf.int %>% round(3)
+```
+
+Notice how the SE method contains negative values and the theory-based method contains values MUCH larger than the other two methods.
+
