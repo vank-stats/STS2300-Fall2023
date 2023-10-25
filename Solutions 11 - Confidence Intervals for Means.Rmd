@@ -198,7 +198,7 @@ compare_boot %>%
 
 14. How broadly might we be able to (or not be able to) apply these conclusions? Consider some of the other variables in the study as well as how the study was conducted. (Also do you think this was a random sample? Why or why not?)
 
-**Answer:** The study only included people between 18 and 25, so we should be cautious about applying results to other ages. Even within this age range, the participants likely all came from a single college, and it was not a random sample (students were given extra credit to participate).
+**Answer:** The study only included people between 18 and 25, so we should be cautious about applying results to other ages. Even within this age range, the participants likely all came from a single college, and it was not a random sample (students were given extra credit to participate). Lastly, spinners may work differently for different people. Just because I believe the overall population mean is lower for those with spinners doesn't mean there aren't some groups of people for which that would not be the case. Remember that in the histograms we saw a big spike around 0 - 2 but that the rest of the distributions were spread out similarly.
 
 <br>
 
@@ -206,6 +206,16 @@ compare_boot %>%
 15. For practice, create the theory-based interval version of your two intervals from this activity. You should get answers similar to your bootstrap distribution based intervals.
 
 ```{r}
+# Theory-based 90% CI for pop. mean memory score
+t.test(control$MemoryScore, 
+       conf.level = 0.9)$conf.int %>%
+  round(digits = 2)
 
+# Theory-based 99% CI for diff in pop. mean memory score between conditions
+t.test(MemoryScore ~ Condition, 
+       data = fidget_compare, 
+       conf.level = 0.99)$conf.int %>%
+  round(digits = 2)
 ```
 
+**Comments:** Notice that the difference in means interval is positive because it used alphabetical order for the two groups (No Spinner minus Spinner) whereas I used Spinner minus No Spinner. Otherwise, the theory-based intervals are similar to what I found using the bootstrap distribution approach.
