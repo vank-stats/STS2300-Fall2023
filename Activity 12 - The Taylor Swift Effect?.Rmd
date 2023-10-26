@@ -67,14 +67,21 @@ $H_a$:
 <br>
 
 
-4. Step 4 - Use your p-value to write a conclusion for your hypothesis test in context of this example.
+4. Step 3 - Briefly describe how the null distribution is created using permutation. (Hint: Imagine that you have slips of paper with the number of yards for each game in front of you. How would you use those to create the null distribution?)
+
+**Answer:**
+
+<br>
+
+
+5. Step 4 - Use your p-value to write a conclusion for your hypothesis test in context of this example.
 
 **Conclusion:**
 
 <br>
 
 
-5. Do you think it would make sense to use a theory-based hypothesis test to answer this question? Why or why not? (Hint: It would be the same test / conditions as we discussed with confidence intervals for a difference in means)
+6. Do you think it would make sense to use a theory-based hypothesis test to answer this question? Why or why not? (Hint: It would be the same test / conditions as we discussed with confidence intervals for a difference in means)
 
 **Answer:**
 
