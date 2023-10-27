@@ -1,0 +1,226 @@
+---
+title: "STS 2300 - Exam 3"
+author: "Put Your Name Here"
+date: '10/27/2023'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+
+During this exam, you are allowed to use your notes and other resources (e.g. our Moodle page, Google). You are **NOT allowed** to discuss the exam with anyone else (including but not limited to classmates, tutors, online message boards, through social media, using shared notes with someone else, etc.) until after everyone has completed the exam. Any violation of these rules will be considered a violation of the Elon Honor Code and will be handled as such. Type your name below to acknowledge your acceptance of these rules. If you have *any* questions, please be sure to ask Dr. V to get clarification.
+
+Enter your name in the space below to acknowledge your agreement to these guidelines.
+
+> I, **YOUR NAME HERE**, have read and understand the rules above. I agree to follow these rules for the exam and accept that not abiding by these rules will be treated as a violation of Elon's Honor Code.
+
+---
+
+Use this space to load any R libraries that you use in your script. I've added the `dplyr`, `infer`, and `ggplot2` packages to start.
+
+```{r, message = FALSE}
+library(dplyr)
+library(infer)
+library(ggplot2)
+```
+
+---
+
+# Part 1 - Car Crash Descriptions (47 points total)
+
+The code below will read a data frame called `carcrash` into R. The data comes from an experiment where participants watched a video of two cars crashing into one another and then were asked to estimate the speed of the cars. One group was asked "At what speed (in km/hr) did the accident occur when the cars **contacted**?" The second group heard the word **smashed** instead of contacted.
+
+```{r}
+carcrash <- read.csv("https://raw.githubusercontent.com/vank-stats/STS2720-Fall2021/main/car_crash.csv")
+```
+
+1. (7 points) Create an appropriate graph to compare the speed estimates between people who heard the two different verbs when asked to make their estimate. Describe the differences between the two groups within the sample.
+
+```{r}
+
+```
+
+**Answer:**
+
+<br>
+
+
+2. (5 points) Calculate the sample mean difference in speed estimates between the two groups and write a sentence about what it means in context of this example.
+
+```{r}
+
+```
+
+**Answer:**
+
+<br>
+
+
+3. (4 points) What is the parameter of interest in this example? Use appropriate symbols and write it in words.
+
+**Answer:**
+
+<br>
+
+
+4. (7 points) Generate a bootstrap distribution for the differences in sample mean speed estimates. Include a histogram of your bootstrap distribution and describe the main characteristics of the distribution.
+
+```{r}
+
+```
+
+**Answer:**
+
+<br>
+
+
+5. (6 points) In what ways would you expect this bootstrap distribution to be similar to the sampling distribution and in what ways would you expect it to be different?
+
+**Answer:**
+
+<br>
+
+
+6. (6 points) Use your bootstrap distribution to calculate a 90% confidence interval for the difference in population means between the two groups. You may use either the percentile method or the standard error method. For your chosen method, briefly explain how your chosen method is used to create confidence intervals.
+
+```{r}
+
+```
+
+**90% CI:**
+
+**Answer:**
+
+<br>
+
+
+7. (6 points) Write an interpretation of your interval in context of this example.
+
+**Answer:**
+
+<br>
+
+
+8. (6 points) Calculate a 90% theory-based confidence interval for this example. How could we decide if it's reasonable to use a theory-based confidence interval for this example? (Note: You do not need to go through the steps to check, you just need to explain what you would do.)
+
+```{r}
+
+```
+
+**90% CI:**
+
+**Answer:**
+
+<br>
+
+
+---
+
+# Part 2 - Airbnb Host Responses (38 points total)
+
+The code below will read a data frame into R from a study on potential discrimination by Airbnb hosts. In the experiment, researchers sent requests to Airbnb hosts asking to stay at their properties. The only difference on each request was the name that was used. Researchers chose names that were predominantly associated with certain genders and races (based on a different study) and randomly assigned a name to each request. They then recorded whether or not the host gave a positive response indicating the person could stay there.
+
+```{r}
+airbnb <- read.csv("https://raw.githubusercontent.com/vank-stats/STS3470-Spring2023/main/airbnb.csv")
+```
+
+
+9. (7 points) Create an appropriate graph to display the proportion of responses that were positive for the two races used in this study. Briefly describe what the graph shows for this example.
+
+```{r}
+
+```
+
+**Description:**
+
+<br>
+
+
+10. (4 points) Calculate a difference in sample proportions of positive responses between the two races used in this study.
+
+```{r}
+
+```
+
+**Estimate:**
+
+<br>
+
+
+11. (7 points) Create a bootstrap distribution for the difference in sample proportions. Make a histogram and describe its relevant characteristics.
+
+```{r}
+
+```
+
+**Description:**
+
+<br>
+
+
+12. (4 points) Create a 99% confidence interval using the standard error method.
+
+```{r}
+
+```
+
+**99% CI:**
+
+<br>
+
+
+13. (6 points) Interpret your interval in context of this example.
+
+**Interpretation:**
+
+<br>
+
+
+14. (4 points) Create a 95% confidence interval for the difference in positive responses between the two **genders** included in this study using a theory-based method.
+
+```{r}
+
+```
+
+**95% CI:**
+
+<br>
+
+
+15. (6 points) Interpret the theory-based interval in context of this example.
+
+**Interpretation:**
+
+<br>
+
+
+---
+
+# Part 3 - Conceptual (15 points total)
+
+16. (9 points - 3 points each) For each of the following, state which of the following the statement applies to: (A) Bootstrap distribution, (B) Distribution of a population, (C) Distribution of a sample, and (D) Sampling distribution. Each statement may apply to more than one distribution. You can list just the letter for the distribution(s).
+
+  a. This distribution can be created using only information from a single sample.
+  
+  **Answer:**
+  
+  b. This distribution is the distribution of a statistic.
+  
+  **Answer:**
+  
+  c. This distribution is centered on a parameter.
+  
+  **Answer:**
+  
+<br>
+
+
+17. (6 points) Suppose you create a bootstrap distribution and use the percentile method to get a confidence interval. The interval includes both positive and negative numbers. Which of the following is not a possible parameter for the interval? Justify your choice. ($p$, $p_1 - p_2$, $\mu$, $\mu_1 - \mu_2$).
+
+**Answer:**
+
+<br>
