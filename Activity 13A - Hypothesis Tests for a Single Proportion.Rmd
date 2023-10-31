@@ -86,7 +86,16 @@ mlb_nulldist <- mlbgames %>%
 <br>
 
 
-6. Want extra practice? Suppose the COVID-19 sniffing dog (from Activity 10) will only be effective if it can identify at least 75% of positive COVID-19 cases. The data below includes only the IDs the dog made for positive samples of COVID-19. Carry out a hypothesis test based on this example.
+6. Try using the `prop.test()` function to carry out a theory-based hypothesis test. Do you get similar results?
+
+```{r}
+
+```
+
+<br>
+
+
+7. Want extra practice? Suppose the COVID-19 sniffing dog (from Activity 10) will only be effective if it can identify at least 75% of positive COVID-19 cases. The data below includes only the IDs the dog made for positive samples of COVID-19. Carry out a hypothesis test based on this example.
 
 ```{r}
 
