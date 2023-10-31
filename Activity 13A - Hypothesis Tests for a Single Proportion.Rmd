@@ -1,0 +1,132 @@
+---
+title: "Activity 13A - Hypothesis Tests for a Single Proportion"
+author: "STS 2300 (Dr. VanKrevelen)"
+date: 'Updated: 10/31/2023'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Below are the packages you will need for this activity. If you use other packages, you can add them here.
+
+```{r, message = FALSE}
+library(ggplot2)
+library(infer)
+library(dplyr)
+```
+
+Let's suppose that we're interested in studying the concept of home field advantage in Major League Baseball during the 2020 season when fan attendance was restricted due to COVID-19. If there's no such thing as home field advantage, the home team will win just as often as the away team (half the time). If there *is* an advantage to the home team, they will win over half the time. To carry out this test, use a significance level of $\alpha = 0.10$.
+
+
+<br>
+
+
+1. Step 1 - Write out appropriate null and alternative hypotheses below. Define $p$ for this specific example.
+
+**$H_0:$**
+
+**$H_a:$**
+
+**p =**
+
+<br>
+
+
+2. Step 2 - I gathered data from two random dates, which you can read into R below. Summarize this data in context of this problem.
+
+```{r}
+mlbgames <- data.frame(date = c(rep("8/21/20", 14), rep("9/7/20", 11)),
+                       winner = c("H", "A", "A", "A", "H",
+                                  "H", "H", "H", "H", "H",
+                                  "H", "A", "A", "A",
+                                  "H", "A", "A", "A", "H",
+                                  "H", "H", "H", "H", "H",
+                                  "H"))
+```
+
+$\hat{p} =$
+
+<br>
+
+
+3. Step 3 - Use the `infer` package to create a null distribution and shade in your p-value on the picture. Then calculate the p-value and write a sentence about what the p-value means for this specific example. Remove `eval = FALSE` when you're ready to run your code. (Note: You aren't giving a formal conclusion yet.)
+
+```{r, eval = FALSE}
+set.seed()
+mlb_nulldist <- mlbgames %>%
+  specify() %>%
+  hypothesize() %H%
+  generate() %>%
+  calculate()
+```
+
+**p-value = **
+
+**Sentence about p-value: **
+
+<br>
+
+
+4. Step 4 - Write a formal conclusion based on your p-value.
+
+**Conclusion: **
+
+<br>
+
+
+5. Write a couple sentences about why you reached the conclusion you did. Do you think it's possible the conclusion is "wrong" (i.e. you rejected $H_0$ even though it's true or failed to reject it even though it's false)? What could we do to feel more confident in our answer?
+
+**Answer:**
+
+<br>
+
+
+6. Want extra practice? Suppose the COVID-19 sniffing dog (from Activity 10) will only be effective if it can identify at least 75% of positive COVID-19 cases. The data below includes only the IDs the dog made for positive samples of COVID-19. Carry out a hypothesis test based on this example.
+
+```{r}
+
+covid_dog <- data.frame(ID = c(rep("positive", 157), rep("negative", 30)))
+```
+
+**Step 1 - Hypotheses**
+
+**$H_0:$**
+
+**$H_a:$**
+
+**p =**
+
+<br>
+
+
+
+**Step 2 - Summarize data**
+
+```{r}
+
+```
+
+$\hat{p} =$
+
+<br>
+
+
+**Step 3 - Compare data to $H_0$ with a null distribution and p-value**
+
+```{r}
+
+```
+
+**p-value =**
+
+<br>
+
+
+**Step 4 - Formal conclusion**
+
+**Conclusion:**
