@@ -1,0 +1,214 @@
+---
+title: "Homework 5 (50 points total)"
+author: "Put Your Name Here"
+date: 'Due: 11/13/2023'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+
+**As a reminder, there are often multiple ways to accomplish the tasks described in your homework assignments. If you use methods that we did not discuss in class (e.g. notes, activities, questions during class), you should explain where you learned your method and how it is accomplishing the task. For example, it's possible to subset data using "square bracket" notation. If I did this, I would say how I learned about it and why the code I used successfully subsets the data in the way I want**
+
+---
+
+Use the code chunk below to load any R libraries that you use in your script. I've added `dplyr` and `infer` as a start.
+
+```{r, message = FALSE}
+library(dplyr)
+library(infer)
+```
+
+---
+
+# Part 1 - Body-Worn Camera Audit (24 points total)
+
+The city of Durham  [conducted an audit](https://www.wral.com/audit-durham-police-officers-routinely-disregard-policies-on-bodycam-videos/19885934/) of body-worn camera practices among their police officers. Part of the audit asked officers if they categorize the videos from their body-worn cameras. Suppose we're interested in testing whether more than half of all Durham police officers **never categorize** their videos.
+
+
+1. (4 points) Set up an appropriate null and alternative hypothesis for this example. Define the parameters used in your hypotheses.
+
+**$H_0$:**
+
+**$H_a$:**
+
+**Define parameter(s):**
+
+<br>
+
+
+2. (3 points) Below is code to read in the data from the audit. Create a graph of the data and calculate an appropriate summary statistic for this example. Report the statistic in the text below.
+
+```{r}
+audit <- data.frame(frequency = c(rep("Never", 153), 
+                                  rep("Sometimes", 81)))
+```
+
+**Statistic:**
+
+<br>
+
+
+3. (3 points) Generate a null distribution for your hypotheses. Graph it with the p-value shaded on the graph. (Note: Remember to set a seed)
+
+```{r}
+
+```
+
+<br>
+
+
+4. (4 points) Calculate the p-value for this example and write a sentence explaining what it means in context of this example. (Note: This is not your interpretation yet.)
+
+```{r}
+
+```
+
+**p-value =**
+
+**Interpretation:**
+
+<br>
+
+
+5. (4 points) Write a conclusion for this hypothesis test in context of the problem (use $\alpha = 0.01$).
+
+**Conclusion:**
+
+<br>
+
+
+6. (3 points) Write code to do a theory-based hypothesis test using this data. Report your p-value below.
+
+```{r}
+
+```
+
+**p-value =**
+
+<br>
+
+
+7. (3 points) Identify a potential data collection issue that we might consider when applying the results of our hypothesis tests.
+
+**Answer:**
+
+<br>
+
+
+
+---
+
+
+# Part 2 - Seeding Clouds (23 points total)
+
+The data below comes from an experiment where researchers wanted to see whether they could increase rainfall by injecting silver iodide into clouds. They identified 52 days that were suitable for rain. On half of the days, clouds were seeded with silver iodide, and on half they weren't. They measured the amount of rain that fell in a specified area on each day.
+
+The data frame consists of two variables, `rain` (amount of rainfall in acre-feet) and `Treatment` ("Seeded" or "Unseeded").
+
+
+<br>
+
+
+8. (4 points) Set up an appropriate null and alternative hypothesis for this example. Define the parameters used in your hypotheses.
+
+**$H_0$:**
+
+**$H_a$:**
+
+**Define parameters:**
+
+<br>
+
+
+9. (4 points) Below is code to read in the data from the experiment. Create an appropriate graph for this data and an appropriate statistic. Report the statistic below and comment on what you notice about the data in your graph.
+
+```{r, echo = FALSE}
+rain <- read.csv("https://raw.githubusercontent.com/vank-stats/STS2720-Fall2022/main/rainfall.csv")
+```
+
+**Statistic:**
+
+**Graph comments:**
+
+<br>
+
+
+10. (4 points) Generate a null distribution for your hypotheses. Graph it with the p-value shaded on the graph. Write a couple sentences about how your sample estimate relates to the null distribution.
+
+```{r}
+
+```
+
+**Answer:**
+
+<br>
+
+
+11. (4 points) Calculate the p-value and write a sentence explaining what it means in context of this example. (Hint: Is your data compatible with the null hypothesis?)
+
+```{r}
+
+```
+
+**Answer:**
+
+<br>
+
+
+12. (4 points) Write a conclusion for this hypothesis test in context of the problem (use $\alpha = 0.05$).
+
+**Conclusion:**
+
+<br>
+
+
+13. (3 points) Answer whichever of the following applies to your conclusion.
+  - If you rejected the null... have we proven that the alternative hypothesis is correct? Why or why not?
+  - If you failed to reject the null... does this suggest the null hypothesis is more likely to be correct than the alternative hypothesis is? Why or why not?
+
+**Answer:**
+
+<br>
+
+
+
+---
+
+
+
+# Reflection (3 Points)
+
+14. Answer **at least two** of the following questions:
+
+a. What's your favorite thing you've learned, done, or experienced in our class this semester? What makes that thing stand out?
+
+**Answer:**
+
+<br>
+
+
+b. This is the first time this course has been offered. What's something you think should be added, increased, or decreased in future semesters? Why would yo umake that change?
+
+**Answer:**
+
+<br>
+
+
+c. What's something from the class that you think you'll still remember one year from now? Why do you expect that thing to stay with you?
+
+**Answer:**
+
+<br>
+
+
+d. What advice would you give to a student taking the course this spring?
+
+**Answer:**
+
+<br>
+

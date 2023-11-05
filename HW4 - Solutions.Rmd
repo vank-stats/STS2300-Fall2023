@@ -1,0 +1,225 @@
+---
+title: "Homework 4 (50 points total)"
+author: "Put Your Name Here"
+date: 'Due: 10/25/2023'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+
+**As a reminder, there are often multiple ways to accomplish the tasks described in your homework assignments. If you use methods that we did not discuss in class (e.g. notes, activities, questions during class), you should explain where you learned your method and how it is accomplishing the task. For example, it's possible to subset data using "square bracket" notation. If I did this, I would say how I learned about it and why the code I used successfully subsets the data in the way I want**
+
+---
+
+Use the code chunk below to load any R libraries that you use in your script. I've added `dplyr` and `infer` as a start.
+
+```{r, message = FALSE}
+library(dplyr)
+library(infer)
+library(ggplot2)
+```
+
+---
+
+# Part 1 - Revisiting Hedgehogs - Roadkill proportion (21 points total)
+
+We are going to revisit the hedgehogs data set from our previous homework assignment. For the sake of the following questions, we will pretend that the data comes from a random sample of dead European hedgehogs (even though this is not the case).
+
+The code below will read the author's dataset into R, remove hedgehogs with missing information about their sex, and create a variable for whether or not they died in traffic (with values of "Yes" or "No"). 
+
+```{r}
+hedgehogs <- read.csv("https://raw.githubusercontent.com/vank-stats/STS2300-Fall2023/main/hedgehogs.csv") %>%
+  filter(Sex != "Unknown") %>%
+  mutate(TrafficDeath = ifelse(Cause == "Roadkill",
+                               "Yes",
+                               "No"))
+```
+
+<br>
+
+1. (2 points) Use R to find an estimate of the proportion of all hedgehogs that die from roadkill. Report your answer in the text below using proper notation.
+
+```{r}
+phat_hedgehog <- mean(hedgehogs$TrafficDeath == "Yes")
+```
+
+**Estimate:** $\hat{p}$ = `r round(phat_hedgehog, 3)`
+
+<br>
+
+
+2. (4 points) Use the `infer` package to generate a bootstrap distribution of 1,000 sample proportions based on this data. Create a histogram of your distribution with your estimate from the previous question added to your graph. Don't forget to set a seed before your bootstrap distribution.
+
+```{r}
+set.seed(19249)
+hedgehog_boot <- hedgehogs %>%
+  specify(formula = TrafficDeath ~ NULL, success = "Yes") %>%
+  generate(reps = 1000, type = "bootstrap") %>%
+  calculate(stat = "prop")
+
+visualize(hedgehog_boot) +
+  geom_vline(xintercept = phat_hedgehog, color = "cyan", linewidth = 2)
+```
+
+<br>
+
+
+3. (3 points) Describe important characteristics of your bootstrap distribution (e.g. shape, center, spread). Include why your estimate from the previous question shows up where it does on your graph.
+
+**Answer:** The graph is roughly bell-shaped, is centered on our sample proportion of 0.436, and has values ranging from around 0.35 to just over 0.5.
+
+<br>
+
+
+4. (4 points) Generate a 95% confidence interval based on your bootstrap distribution using either the percentile method or the standard error method. Report the interval below using proper notation. Then explain how your chosen method creates confidence intervals as applied to this example. (Note: This does not mean to tell me what functions you used. Instead, you should briefly describe the process that creates the interval)
+
+```{r}
+hh_ci_perc <- hedgehog_boot %>%
+  get_ci(level = 0.95, type = "percentile")
+hh_ci_se <- hedgehog_boot %>%
+  get_ci(level = 0.95, type = "se", point_estimate = phat_hedgehog)
+```
+
+**Confidence interval (percentile):** (`r round(hh_ci_perc, 3)`)
+
+**Explanation (percentile):** The percentile method finds the middle 95% of the values from the bootstrap distribution. Since the bootstrap distribution contained values from roughly 0.35 to 0.53 or so, the middle 95% ends up being only from 0.377 to 0.49.
+
+**Confidence interval (SE):** (`r round(hh_ci_se, 3)`)
+
+**Explanation (SE):** The SE method uses the standard distribution of the bootstrap distribution (which is `r round(sd(hedgehog_boot$stat), 3)`). It then starts with our point estimate of `r round(phat_hedgehog, 3)` and adds and subtracts a critical value times the standard deviation.
+
+<br>
+
+
+5. (4 points) Write a sentence interpreting your confidence interval in context of this example.
+
+**Interpretation:** (Using percentile example) We are 95% confident that the between 37.7% and 49% of European hedgehogs die from being roadkill.
+
+<br>
+
+
+6. (4 points) Suppose the researchers decided this confidence interval was too wide for them to effectively reach conclusions. What are two things they could do to reduce the width of their confidence interval? What is a downside to each?
+
+**Option 1:** They could choose a smaller confidence level (like 90%). The downside is that they would not be as confident that their interval contained the true population propotion.
+
+**Option 2:** The could collect more data to increase their sample size. The downside is that this would take more time and money.
+
+<br>
+
+
+---
+
+
+# Part 2 - Hedgehogs Cont. - Comparing Sexes (19 points)
+
+Suppose that now researchers are interested in whether male or female hedgehogs are more likely to die due to roadkill. 
+
+7. (4 points) Calculate an estimate for the difference in the proportion of female and male hedgehogs that die due to roadkill. Then write a sentence explaining what the number means in context of this example.
+
+```{r}
+hh_pdiff_est <- hedgehogs %>%
+  specify(formula = TrafficDeath ~ Sex, success = "Yes") %>%
+  calculate(stat = "diff in props", order = c("Male", "Female"))
+```
+
+**Estimate:** $\hat{p}_1 - \hat{p}_2$ = `r round(hh_pdiff_est, 3)`
+
+**Interpretation:** In the sample, the proportion of European hedgehogs that die from being roadkill is 0.137 higher for male hedgehogs than for female hedghogs.
+
+<br>
+
+
+8. (4 points) Generate a boostrap resampling distribution of 1,000 sample differences in proportions. Make a histogram of these values. What does it mean that 0 is located where it is on your graph?
+
+```{r}
+hh_bysex_boot <- hedgehogs %>%
+  specify(formula = TrafficDeath ~ Sex, success = "Yes") %>%
+  generate(reps = 1000, type = "bootstrap") %>%
+  calculate(stat = "diff in props", order = c("Male", "Female"))
+visualize(hh_bysex_boot)
+```
+
+**Answer:** This means that in the bootstrap distribution there were very few samples where the proportion of female hedgehogs that died from roadkill was higher than it was for male hedgehogs.
+
+<br>
+
+
+9. (3 points) Calculate a 90% confidence interval for a difference in proportions. Use the opposite method that you used in Part 1 (e.g. if you used percentile method there, use standard error method here, and vice versa). Report the interval below.
+
+```{r}
+hh_bysex_ci <- hh_bysex_boot %>%
+  get_ci(level = 0.9, 
+         type = "percentile")
+hh_bysex_ci_2 <- hh_bysex_boot %>%
+  get_ci(level = 0.9, 
+         type = "se", 
+         point_estimate = hh_pdiff_est)
+```
+
+**90% Confidence interval (percentile method):** (`r round(hh_bysex_ci, 3)`)
+
+**90% Confidence interval (SE method):** (`r round(hh_bysex_ci_2, 3)`)
+
+<br>
+
+
+10. (4 points) Write a sentence interpreting your confidence interval in context of this example.
+
+**Interpretation:** We are 90% confident that male European hedgehogs are between 3.2 and 24.6 percentage points more likely to have their death be due to roadkill than female European hedgehogs.
+
+<br>
+
+
+11. (4 points) Can we be 90% confident that one sex dies by roadkill more often than the other? Why or why not?
+
+**Answer:** Yes! Our entire 90% confidence interval is suggesting we think male hedgehogs die by roadkill more often.
+
+<br>
+
+
+---
+
+# Part 3 - Short Answer (8 points)
+
+12. (4 points) Calculate a theory-based confidence interval for either part 1 or part 2. Is your interval similar to the simulation-based one you previously calculated? Explain why it makes sense that this is the case.
+
+```{r}
+table(hedgehogs$TrafficDeath, hedgehogs$Sex) # to get numbers for prop.test()
+prop.test(x = 112, n = 257, conf.level = 0.95)$conf.int
+prop.test(x = c(34, 78), n = c(97, 160), conf.level = 0.9)$conf.int
+```
+
+**Explanation:** Both intervals are similar. This makes sense because the bootstrap and sampling distributions likely had similar shapes. (Note: My difference in proportions interval is negative here because it uses alphabetical order for the groups: female - male)
+
+<br>
+
+
+13. (4 points) Explain the difference between a bootstrap distribution and a sampling distribution. Which quantity should be at the center of each and why?
+
+**Answer:** A sampling distribution is the distribution of a statistic (like a sample proportion) from all samples of a certain size out of a population. The parameter of interest (like a population proportion) will be at the center since my samples are coming from the population. A bootstrap distribution takes samples with replacement from a sample and graphs the distribution of a statistic. Because these samples come from our observed sample, the relevant statistic from that sample will be at the center.
+
+<br>
+
+
+---
+
+# Reflection (2 points)
+
+Answer one (or both of the following questions):
+
+14. (Option A) What's something from Unit 3 that isn't entirely clear to you and what would it take to help solidify your understanding of the concept?
+
+**Answer:**
+
+<br>
+
+
+14. (Option B) What's an example of how you've used confidence intervals in the past or envision using them in the future? What type of interval(s) did/will you use? What was/is the goal of using them in that context?
+
+**Answer:**
+
