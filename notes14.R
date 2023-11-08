@@ -104,3 +104,13 @@ visualize(esp_null) +
 esp_null %>%
   get_pvalue(obs_stat = esp_stat,
              direction = "right")
+
+
+
+# Theory-based test for single mean (bodytemps)
+
+t.test(bodytemps$temperature, mu = 98.6, alternative = "two.sided")
+
+# Theory-based test for a difference in means (esp)
+
+t.test(Matches ~ Group, data = esp, alternative = "greater")
