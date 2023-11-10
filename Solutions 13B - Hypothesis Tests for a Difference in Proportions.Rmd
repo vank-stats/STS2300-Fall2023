@@ -1,0 +1,192 @@
+---
+title: "Activity 13B - Hypothesis Tests for a Difference in Proportions"
+author: "STS 2300 (Dr. VanKrevelen)"
+date: 'Updated: 11/2/2023'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Below are the packages you will need for this activity. If you use other packages, you can add them here.
+
+```{r, message = FALSE}
+library(ggplot2)
+library(infer)
+library(dplyr)
+```
+
+# COVID-19 Antibodies Example
+
+The example for this activity comes from a [2020 New York Times article](https://www.nytimes.com/2020/08/19/health/coronavirus-fishing-boat.html) about a ship that had a coronavirus outbreak while at sea. This was before COVID-19 vaccines had been developed and at a time when people will still learning basic information about the virus. Before setting sail, the crew had been tested for COVID-19 antibodies and 3 of the 120 sailors had these antibodies while the other 117 did not. Below is a quote from the article.
+
+> The three sailors confirmed to have neutralizing antibodies did not test positive for the virus during the course of the study; 103 of the remaining 117 became infected. "These numbers may be small, but they’re highly significant", Dr. Greninger said.
+
+We will conduct a hypothesis test to see if we can see what Dr. Greninger means when he says these results are "highly significant".
+
+<br>
+
+
+1. Step 1 - How could we set up our hypotheses based on our likely question of interest? Try doing this both in symbols and in words.
+
+**In symbols...** 
+
+**$H_0$:** $p_1 - p_2 = 0$
+
+**$H_a$:** $p_1 - p_2 < 0$
+
+**Parameter definitions:** p is the population proportion that contracts COVID-19 (and group 1 is those with antibodies, group 2 is those without)
+
+
+**In words...**
+
+**$H_0$:** People with and without COVID-19 antibodies are equally likely to contract COVID-19.
+
+**$H_a$:** People with COVID-19 antibodies are less likely to contract COVID-19 than those without.
+
+<br>
+
+
+2. Step 2 - The data is mentioned at the top of this activity. I've included code to read it into R below. Create a graph displaying the data in relation to our question of interest and calculate an appropriate statistic for this question.
+
+```{r}
+ship <- data.frame(antibodies = c(rep("yes", 3), rep("no", 117)),
+                   infected = c(rep("no", 17), rep("yes", 103)))
+
+ggplot(ship) +
+  geom_bar(aes(x = antibodies, fill = infected), position = "fill")
+
+ship_diff <- ship %>%
+  specify(infected ~ antibodies, success = "yes") %>%
+  calculate(stat = "diff in props", order = c("yes", "no"))
+ship_diff
+```
+
+**Statistic:** $\hat{p}_1 - \hat{p}_2$ = `r round(ship_diff, 3)`
+
+<br>
+
+
+3. Step 3 - Create a null distribution and visualize it with a p-value shaded in. Then calculate the p-value and write a sentence about what the p-value means in context of this example.
+
+```{r}
+set.seed(1031)
+
+ship_null <- ship %>%
+  specify(infected ~ antibodies, success = "yes") %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 1000, type = "permute") %>%
+  calculate(stat = "diff in props", order = c("yes", "no"))
+
+visualize(ship_null) +
+  shade_p_value(obs_stat = ship_diff, direction = "left")
+
+get_p_value(ship_null, 
+            obs_stat = ship_diff, 
+            direction = "left")
+```
+
+**p-value =** 0.002
+
+**Sentence:** In a world where having COVID-19 antibodies or not is completely unrelated to contracting COVID-19, it would be VERY unusual (0.2% chance) to see all three people with antibodies remain uninfected on the ship when 103 people are infected.
+
+<br>
+
+
+4. Step 4 - Write a formal conclusion for this example.
+
+**Conclusion:** My p-value of 0.002 is much smaller than my significance level of 0.05, so I will reject the null hypothesis. There is strong evidence that people with COVID-19 antibodies are less likely to contract the virus than those without the antibodies.
+
+<br>
+
+
+5. Were the results "highly significant"? In other words, are we still able to learn something about the role of antibodies despite only having three people in the group that had them?
+
+**Answer:** Even though one group only had three people, our results are highly significant because they would have been very unusual in a world where the null hypothesis is true. This shows that we can sometimes learn things even from very small samples.
+
+<br>
+
+
+6. Besides the sample size, are there any other reasons we may want to be cautious about attributing the whole difference we're seeing to whether the person had antibodies or not? (Hint: What other ways may these people have differed from the people without antibodies?)
+
+**Answer:** The group of three previously had COVID-19, so they may have been required to (or chosen to) take different safety precautions than others. For example, they may have socially distanced more, been more likely to wear masks, etc. Neither group was a random sample, so it's also possible this group had different jobs than others that isolated them from the spreading infection.
+
+<br>
+
+
+---
+
+# Extra practice - Hydroxychloroquine Example
+
+A study was conducted looking at the efficacy of hydroxychloroquine in reducing the likelihood of contracting COVID-19. A link to the study is [here](https://www.nejm.org/doi/pdf/10.1056/NEJMoa2016638?articleTools=true). (Note: This example is looking at just one small part of a much larger study.)
+
+1. Step 1 - What hypotheses should researchers use to test whether fewer people will test positive when taking hydroxychloroquine compared to a placebo? Be sure to define your parameters.
+
+$H_0$: $p_1 - p_2 = 0$
+
+$H_a$: $p_1 - p_2 < 0$
+
+**Parameter definitions:** p is the population proportion of people who test positive (in group 1 this is among those taking hydroxychloroquine and in group 2 this is among people taking a placebo)
+
+<br>
+
+
+2. Step 2 - In the study, 49 of the 414 subjects taking hydroxychloroquine became infected with COVID-19. 58 of the 407 subjects taking the placebo became infected. Code to read in the data is below. Create a numerical and graphical summary of the data that is relevant to this problem.
+
+```{r}
+study <- data.frame(treatment = c(rep("hydroxy", 414), rep("placebo", 407)),
+                    infected = c(rep("yes", 49), rep("no", 414 - 49),
+                                 rep("yes", 58), rep("no", 407 - 58)))
+
+study_diff <- study %>%
+  specify(infected ~ treatment, success = "yes") %>%
+  calculate(stat = "diff in props", order = c("hydroxy", "placebo"))
+
+ggplot(study, aes(x = treatment, fill = infected)) +
+  geom_bar(position = "fill")
+```
+
+**Statistic:** $\hat{p}_1 - \hat{p}_2$ = `r round(study_diff, 3)`
+
+<br>
+
+
+3. Step 3 - Use the `infer` package to create a null distribution and to calculate a p-value.
+
+```{r}
+set.seed(905)
+
+study_null <- study %>%
+  specify(infected ~ treatment, success = "yes") %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 1000, type = "permute") %>%
+  calculate(stat = "diff in props", order = c("hydroxy", "placebo"))
+
+visualize(study_null) +
+  shade_pvalue(obs_stat = study_diff,
+               direction = "left")
+
+get_pvalue(study_null,
+           obs_stat = study_diff,
+           direction = "left")
+```
+
+**p-value =** 0.192
+
+<br>
+
+
+4. Step 4 - Write a formal conclusion in context of the problem. Use $\alpha = 0.05$.
+
+**Conclusion:** Since our p-value (0.192) is greater than our significance level (0.05), we fail to reject the null hypothesis. There is insufficient evidence based on this data to conclude taking hydroxychloroquine reduces the population proportion of people who will contract COVID-19.
+
+<br>
+
+
+5. The authors of the paper say that the study was only designed with sufficient power to find a reduction of at least 50 percent. What do you think this means? What do you think researchers can do to make a test "powerful" enough to detect smaller differences?
+
+**Answer:** This means that the researchers were unlikely to find sufficient evidence of a difference in population proportions unless the population proportion for the hydroxychloroquine group was half as big as the population proportion for the control group. In other words, if there were a smaller impact, their study would be unlikely to be able to detect it. They would need a larger sample size to detect a smaller difference between groups.
