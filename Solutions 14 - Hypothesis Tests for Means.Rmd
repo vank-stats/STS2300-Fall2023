@@ -1,0 +1,196 @@
+---
+title: "Activity 14 - Hypothesis Tests for Means"
+author: "STS 2300 (Dr. VanKrevelen)"
+date: 'Updated: 11/4/2023'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Below are the packages you will need for this activity. If you use other packages, you can add them here.
+
+```{r, message = FALSE}
+library(ggplot2)
+library(infer)
+library(dplyr)
+```
+
+
+# Example 1 - Prius Mileage
+
+Suppose Toyota is claiming that their newest Prius Prime model gets over 100 miles per gallon on average. A car review website plans to test this claim. (Use $\alpha = 0.10$ for your significance level)
+
+<br>
+
+1. **Step 1** - Write out the appropriate hypotheses for this problem. Define any parameters below.
+
+$H_0: \mu = 100$
+
+$H_A: \mu > 100$
+
+**Define parameter(s):** $\mu$ = the population mean miles per gallon for the newest Prius Prime model
+
+<br>
+
+
+2. **Step 2** - Gather and summarize data
+
+The car review website has gathered data from 19 Prius Prime owners. The `average_mpg` variable is what each owner reported as their average miles per gallon over the past month. Below is the code to read in this data. 
+
+Generate a graph to view the data and then calculate an appropriate statistic to summarize the data in relation to these hypotheses. Write a couple sentences about what your graph and statistic show you.
+
+```{r}
+prius <- read.csv("https://www.openintro.org/data/csv/prius_mpg.csv")
+
+prius_xbar <- mean(prius$average_mpg)
+prius_xbar
+
+ggplot(prius) +
+  geom_histogram(aes(x = average_mpg), 
+                 binwidth = 20, 
+                 color = "white") +
+  geom_vline(xintercept = 100, 
+             color = "cyan2", 
+             linewidth = 2)
+```
+
+**Statistic:** $\bar{x} = 144.86$ mpg
+
+**Description:** The sample mean was 144.86 mpg and most of the observations in the histogram seem to be above 100 mpg as well. This might lead me to guess that we will have enough evidence to conclude the population mean is also above 100.
+
+<br>
+
+
+3. **Step 3** - Use the `infer` package to generate a null distribution. Visualize your p-value on the distribution and calculate the p-value. Write a sentence explaining what the p-value means in context. (Note: You are not writing a conclusion for your hypothesis test yet.)
+
+```{r}
+set.seed(94027)
+prius_null <- prius %>%
+  specify(formula = average_mpg ~ NULL) %>%
+  hypothesize(null = "point", mu = 100) %>%
+  generate(reps = 1000, type = "bootstrap") %>%
+  calculate(stat = "mean")
+
+visualize(prius_null) +
+  shade_pvalue(obs_stat = prius_xbar, direction = "right")
+
+prius_pval <- prius_null %>%
+  get_pvalue(obs_stat = prius_xbar, direction = "right")
+prius_pval
+```
+
+**p-value =** 0.001
+
+**Sentence:** Our p-value of 0.001 means that in a world where the newest Prius Prime model gets a population mean of 100 mpg, we would see a sample mean as high as the one in our data only 0.1% of the time. In other words, this data was not very compatible with the null hypothesis.
+
+<br>
+
+
+4. **Step 4** - Write a conclusion for your hypothesis test Make sure that you address each of the important elements mentioned in class.
+
+**Conclusion:** Because our p-value of 0.001 is less than the significance level of 0.1, I will reject the null hypothesis. There is really strong evidence to conclude that the population mean miles per gallon for the newest Prius Prime model is actually greater than 100 mpg.
+
+<br>
+
+
+5. What questions or concerns might we have before applying these conclusions too broadly? Consider what information you were given, how the data was collected, etc.
+
+**Answer:** The sample size is pretty small. We might wonder who signed up to take part in this study. We might wonder why there there is a gap in reported mileages (is this people using their cars differently than others?). The data was reported by each owner and there may not have been consistent methods in how they determined mpg (e.g. some may have just guessed or exaggerated).
+
+<br>
+
+
+---
+
+
+# Example 2 - Fidget spinners
+
+We previously looked at some data where people used fidget spinners and researchers measured their attention and memory. Suppose we want to compare the attention score between people who are near a fidget spinner (but not the one using it) and people with no spinner present. We suspect that those without a spinner present might have a higher memory score. (Use $\alpha = 0.05$ for your significance level)
+
+<br>
+
+1. **Step 1** - Write out the appropriate hypotheses for this problem. Define any parameters below.
+
+$H_0: \mu_1 - \mu_2 = 0$
+
+$H_A: \mu_1 - \mu_2 > 0$
+
+**Define parameter(s):** $\mu_i$ is the population mean attention score for group i (i = 1 for no spinner present and i = 2 for those near a fidget spinner)
+
+<br>
+
+
+2. **Step 2** - Below is code to read in the data and to remove the third group (those actively using a spinner). Generate a graph to view the data and then calculate an appropriate statistic to summarize the data for these hypotheses. Write a couple sentences about what you notice.
+
+```{r}
+fidget <- read.csv("https://raw.githubusercontent.com/vank-stats/STS2300-Fall2023/main/fidget_spinners.csv") %>%
+  filter(Condition != "Spinner")
+
+ggplot(fidget) + 
+  geom_boxplot(aes(x = AttentionScore, y = Condition))
+
+fidget_diffinxbars <- fidget %>%
+  specify(formula = AttentionScore ~ Condition) %>%
+  calculate(stat = "diff in means", order = c("No Spinner", "Spinner Present"))
+
+fidget_diffinxbars
+```
+
+**Statistic:** $\bar{x}_1 - \bar{x}_2 = 0.281$
+
+**Description:** The sample mean is 0.281 points higher for the no spinner group than the spinner present group. In our boxplot, the median, Q3, and max are a bit higher for the no spinner group. However, there is a lot of overlap between the two boxplots.
+
+<br>
+
+
+3. **Step 3** - Use the `infer` package to generate a null distribution. Visualize your p-value on the distribution and calculate the p-value. Write a sentence explaining what the p-value means in context. (Note: You are not writing a conclusion for your hypothesis test yet.)
+
+```{r}
+set.seed(456987)
+
+fidget_null <- fidget %>%
+  specify(formula = AttentionScore ~ Condition) %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 1000, type = "permute") %>%
+  calculate(stat = "diff in means", order = c("No Spinner", "Spinner Present"))
+
+visualize(fidget_null) +
+  shade_p_value(obs_stat = fidget_diffinxbars, 
+                direction = "right")
+
+fidget_null %>%
+  get_p_value(obs_stat = fidget_diffinxbars, 
+              direction = "right")
+```
+
+**p-value =** 0.101
+
+**Sentence:** The p-value of 0.101 means that in a world where these two groups have the same population mean attention score, we would see the no spinner group's sample mean at least 0.281 points above the spinner present's sample mean about 10% of the time. This is not too uncommon, so this data seems compatible with the null hypothesis.
+
+<br>
+
+
+4. **Step 4** - Write a conclusion for your hypothesis test based on the p-value.
+
+**Conclusion:** Because our p-value of 0.101 is above the significance level of 0.05, we fail to reject the null hypothesis. There is insufficient evidence to claim that having no spinner present has a higher population mean attention score than having a spinner present.
+
+
+<br>
+
+
+5. Does this mean that fidget spinners aren't distracting for people nearby? If not, what does it mean?
+
+**Answer:** Not necessarily. We've only shown that this data is compatible with the null hypothesis, but it is also somewhat compatible with the alternative hypothesis. It's possible that with a larger sample size we would reject the null hypothesis.
+
+
+<br>
+
+
+6. A 95% confidence interval for the difference in population means would be around (-0.2, 0.7). Discuss how this does or does not agree with your hypothesis test conclusion.
+
+**Answer:** This interval contains negative and positive numbers, which matches our decision to not reject the null hypothesis. In both cases, we aren't sure which group has the higher population mean (or if they have the same mean).
