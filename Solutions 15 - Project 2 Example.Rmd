@@ -1,0 +1,218 @@
+---
+title: "Activity 15 - Project 2 Example"
+author: "STS 2300 (Dr. VanKrevelen)"
+date: 'Updated: 11/4/2023'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Below are the packages you will need for this activity. If you use other packages, you can add them here.
+
+```{r, message = FALSE}
+library(ggplot2)
+library(infer)
+library(dplyr)
+library(ipumsr)
+```
+
+For this activity, we are going to use Option 1 from the Project 2 data to see an example of a Chi-Squared test and an ANOVA test. This will give you an example of some things you might try / consider when working with this data.
+
+**Before starting this activity, you will need to put the Option 1 data into the same folder as your .Rmd file**
+
+<br>
+
+
+# Data management
+
+First, I don't want to use the full 100,000+ observations, so I'm going to subset my data to only include people who are between 30 and 65 years old in Alamance County. The age component will be important because I'm going to look at education levels and marriage status. If I included all ages, I would have very young people who haven't had time to do either of these things (or old people much more likely to be widowed).
+
+```{r}
+proj2 <- read_ipums_micro("usa_00012.xml")
+
+ALAM <- filter(proj2, 
+               COUNTYFIP == 1,
+               AGE >= 30,
+               AGE <= 65)
+```
+
+
+
+Next, I'm going to explore some of the variables I'm interested in. I want to study marital status (`MARST`) and education level obtained (`EDUC`). 
+
+```{r}
+table(ALAM$EDUC, ALAM$MARST)
+```
+
+
+Both variables have more categories than I reasonably want to work with. I'm going to combine several categories of each using `mutate()` and a function called `case_when()`. The `factor()` function is being used to put the categories in the proper order when I graph them.
+
+```{r}
+ALAM <- ALAM %>%
+  mutate(education = case_when(EDUC < 6 ~ "Less than HS",
+                               EDUC == 6 ~ "HS grad",
+                               EDUC > 6 ~ "Attended college"),
+         education = factor(education, levels = c("Less than HS",
+                                                  "HS grad",
+                                                  "Attended college")),
+         marriage = case_when(MARST <= 2 ~ "Married",
+                              MARST >2 & MARST < 6 ~ "Previously married",
+                              MARST == 6 ~ "Never married"),
+         marriage = factor(marriage, levels = c("Never married",
+                                                "Married",
+                                                "Previously married")))
+
+table(ALAM$education, ALAM$marriage)
+```
+
+
+Suppose I'm also interested in how much people work per week. I'm going to subset my data to only include my variables of interest.
+
+```{r}
+ALAM <- ALAM %>%
+  select(UHRSWORK, education, marriage)
+
+# Save the data as a .csv file
+# Then I could set the code chunks above to eval = FALSE
+# so that they don't run every single time. And I could instead
+# read my data in through my much smaller .csv file.
+
+# write.csv(ALAM, "projectdata.csv", row.names = FALSE)
+```
+
+```{r, eval = FALSE}
+# Read in my csv file
+
+ALAM <- read.csv("projectdata.csv")
+```
+
+
+# ANOVA Test
+
+Let's do an ANOVA test to see if there are differences in population mean hours worked across education levels for 30 - 65 year olds in Alamance County.
+
+1. What are the null and alternative hypotheses?
+
+$H_0:$ There is no difference in population mean hours worked per week across our three education levels.
+
+$H_a:$ At least two population mean hours worked per week differ from one another across our three education levels.
+
+<br>
+
+
+2. Summarize our data graphically and numerically.
+
+```{r}
+ggplot(ALAM, aes(x = UHRSWORK, y = education)) +
+  geom_boxplot()
+
+ALAM %>%
+  specify(UHRSWORK ~ education) %>%
+  calculate(stat = "F")
+```
+
+<br>
+
+
+3. Generate a null distribution with a p-value shaded on the graph. (Remember to set a seed)
+
+```{r}
+set.seed(111523)
+ANOVA_null <- ALAM %>%
+  specify(UHRSWORK ~ education) %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 1000, type = "permute") %>%
+  calculate(stat = "F")
+
+visualize(ANOVA_null) +
+  shade_pvalue(obs_stat = 10.71215,
+               direction = "right")
+
+get_pvalue(ANOVA_null,
+           obs_stat = 10.71215,
+           direction = "right")
+```
+
+<br>
+
+
+4. Interpret your p-value in context of the problem. Then use your p-value to reach a formal conclusion.
+
+**P-value interpretation:** It is very unlikely that we would see data like this in a world where the three education levels have the same population mean hours worked per week.
+
+**Hypothesis test conclusion:** Since my p-value is essentially 0, I reject the null hypothesis and have very strong evidence to conclude at least two education levels have a different population mean usual hours worked per week among 30 - 65 year olds in Alamance county.
+
+<br>
+
+
+
+# Chi-Squared Test
+
+Let's do a Chi-Squared test to see if there is a relationship between education level and martial status among 30 - 65 year olds in Alamance County.
+
+1. What are the null and alternative hypotheses?
+
+$H_0:$ For 30 - 65 year olds in Alamance county there is no relationship between education level and marital status.
+
+$H_a:$ For 30 - 65 year olds in Alamance county there is some relationship between education level and marital status.
+
+<br>
+
+
+2. Summarize our data graphically and numerically.
+
+```{r}
+ggplot(ALAM, aes(x = education, fill = marriage)) +
+  geom_bar(position = "fill")
+
+ALAM_chi <- ALAM %>%
+  specify(education ~ marriage) %>%
+  calculate(stat = "Chisq")
+ALAM_chi
+```
+
+<br>
+
+
+3. Generate a null distribution with a p-value shaded on the graph. (Remember to set a seed)
+
+```{r}
+set.seed(959)
+chisq_null <- ALAM %>%
+  specify(education ~ marriage) %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 1000, type = "permute") %>%
+  calculate(stat = "Chisq")
+
+visualize(chisq_null) +
+  shade_pvalue(obs_stat = ALAM_chi,
+               direction = "right")
+get_pvalue(chisq_null,
+           obs_stat = ALAM_chi,
+           direction = "right")
+```
+
+<br>
+
+
+4. Interpret your p-value in context of the problem. Then use your p-value to reach a formal conclusion.
+
+**P-value interpretation:** The p-value of 0 means in 1,000 simulations from a world where the two variables are not related, we never saw data that favored our alternative hypothesis as much as the observed data does.
+
+**Hypothesis test conclusion:** With a p-value of essentially 0, I can reject the null hypothesis. There is very strong evidence of some sort of relationship between education level and marital status among 30 - 65 year olds in Alamance county.
+
+<br>
+
+**Note:** In both of these examples, our results and conclusions are specific to the ways that we recorded these variables.
+
+
+# Citing our data
+
+Lastly, let's practice citing our data like you'll need to for the project. You can use the function `ipums_condition()` to get the citation infomation. Scroll down near the bottom of the output then copy and past the citation (statrting with "Steven Ruggles") and paste it into the document below.
+
+**Include citation below**
