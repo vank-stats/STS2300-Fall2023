@@ -216,3 +216,7 @@ get_pvalue(chisq_null,
 Lastly, let's practice citing our data like you'll need to for the project. You can use the function `ipums_condition()` to get the citation infomation. Scroll down near the bottom of the output then copy and past the citation (statrting with "Steven Ruggles") and paste it into the document below.
 
 **Include citation below**
+
+Steven Ruggles, Sarah Flood, Matthew Sobek, Danika Brockman, Grace Cooper,
+ Stephanie Richards, and Megan Schouweiler. IPUMS USA: Version 13.0 [dataset].
+Minneapolis, MN: IPUMS, 2023. https://doi.org/10.18128/D010.V13.0
