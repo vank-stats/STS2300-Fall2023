@@ -1,0 +1,246 @@
+---
+title: "STS 2300 - Exam 4"
+author: "Put Your Name Here"
+date: '11/17/2023'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+
+During this exam, you are allowed to use your notes and other resources (e.g. our Moodle page, Google). You are **NOT allowed** to discuss the exam with anyone else (including but not limited to classmates, tutors, online message boards, through social media, using shared notes with someone else, etc.) until after everyone has completed the exam. Any violation of these rules will be considered a violation of the Elon Honor Code and will be handled as such. Type your name below to acknowledge your acceptance of these rules. If you have *any* questions, please be sure to ask Dr. V to get clarification.
+
+Enter your name in the space below to acknowledge your agreement to these guidelines.
+
+> I, **YOUR NAME HERE**, have read and understand the rules above. I agree to follow these rules for the exam and accept that not abiding by these rules will be treated as a violation of Elon's Honor Code.
+
+---
+
+Use this space to load any R libraries that you use in your script. I've added the `dplyr`, `infer`, and `ggplot2` packages to start.
+
+```{r, message = FALSE}
+library(dplyr)
+library(infer)
+library(ggplot2)
+```
+
+---
+
+# Part 1 - Cannabis and Creativity (44 points total)
+
+A group of researchers studied the relationship between cannabis use and creativity. They recruited "light cannabis users" from areas where the drug had been legalized. Participants were randomly assigned to perform a task either after cannabis use or not after use. At the end, the participants rated their level of creativity on the task.
+
+The data set includes three variables: 
+
+- `condition` (whether they were assigned to use cannabis or not), 
+- `self_rating` (how each person rated their own creativity), and 
+- `external_rating` (how someone else rated their creativity). 
+
+The external raters did not know which condition the person they were rating belonged to. (Note: The self rating and external rating were not on the same scale.)
+
+
+```{r}
+creativity <- read.csv("https://raw.githubusercontent.com/vank-stats/STS2720-Fall2022/main/creativity.csv")
+```
+
+<br>
+
+
+1. (6 points) Write out appropriate hypotheses to test whether people who have recently used cannabis have a different average perception **of their own creativity** than people who are not. Define any parameters used in your hypotheses.
+
+$H_0:$
+
+$H_a$:
+
+**Define parameter(s):**
+
+<br>
+
+
+2. (7 points) Create an appropriate graph to visualize this data and comment on what it tells us in relation to our question of interest.
+
+```{r}
+
+```
+
+**Answer:**
+
+
+<br>
+
+3. (5 points) Calculate an appropriate statistic to summarize this data and interpret it in context.
+
+```{r}
+
+```
+
+**Statistic:**
+
+**Interpretation:**
+
+<br>
+
+
+4. (6 points) Use the `infer` package to generate a null distribution. Shade your p-value on the graph.
+
+```{r}
+
+```
+
+<br>
+
+
+5. (6 points) Calculate the p-value and write a sentence about what it means in context. If it helps, you can refer to your graph to do this.
+
+```{r}
+
+```
+
+**p-value =**
+
+**Answer:**
+
+<br>
+
+
+6. (6 points) Write a formal conclusion for the hypothesis test based on your p-value. (Use $\alpha = 0.05$)
+
+**Conclusion:**
+
+<br>
+
+
+7. (8 points) Use a theory-based method to calculate a p-value for whether or not there is a population mean difference in rating **by an external person** between our two groups. Write a conclusion for this test. (Use $\alpha = 0.05$)
+
+```{r}
+
+```
+
+**p-value =**
+
+**Conclusion:**
+
+<br>
+
+
+---
+
+
+# Part 2 - Parking Tickets in New York (38 points total)
+
+One afternoon last summer, researchers gathered data from six different routes in Manhattan to explore how likely someone is to get a ticket if they park in front of a fire hydrant. The researchers observed 138 violations and used publicly available traffic ticket data to determine that only 7 drivers were given tickets for these violation.
+
+```{r}
+parking <- data.frame(ticket = c(rep("yes", 7), 
+                                 rep("no", 138 - 7)))
+```
+
+
+<br>
+
+
+8. (6 points) Suppose we want to know whether there is less than a 10% chance of receiving a ticket when someone parks in front of a fire hydrant in Manhattan. Set up an appropriate null and alternative hypothesis. Define any parameters used in the hypotheses.
+
+$H_0:$
+
+$H_a$:
+
+**Define parameter(s):**
+
+<br>
+
+
+9. (5 points) Calculate an appropriate statistic to summarize this data. Write it below with proper notation.
+
+```{r}
+
+```
+
+**Statistic:**
+
+<br>
+
+
+10. (6 points) Use the `infer` package to generate a null distribution. Shade your p-value on the graph.
+
+```{r}
+
+```
+
+<br>
+
+
+11. (6 points) Calculate the p-value. Explain what it means in context of this example. You can refer to your null distribution graph if it's helpful.
+
+```{r}
+
+```
+
+**p-value =**
+
+**Explanation:**
+
+<br>
+
+
+12. (6 points) Write a formal conclusion for the hypothesis test based on your p-value. (Use $\alpha = 0.05$)
+
+**Conclusion:**
+
+<br>
+
+
+13. (5 points) What concerns might we have or what limitations should we expect in terms of generalizing these results to everyone who parks in front of a fire hydrant in Manhattan?
+
+**Answer:**
+
+<br>
+
+
+14. (4 points) Conduct a theory-based version of this hypothesis test and report your p-value below.
+
+```{r}
+
+```
+
+**p-value =**
+
+<br>
+
+
+---
+
+
+# Part 3 - Short Answer (18 points total)
+
+Unlike the above sections, each question in this section is not related to a common data set or example.
+
+<br>
+
+
+15. (6 points) The ANOVA test is an extension of what other hypothesis test that we have learned about? Explain how the two tests are related.
+
+**Answer:**
+
+<br>
+
+
+16. (6 points) Suppose you complete a hypothesis test and get a p-value of 0.55. Does this suggest we think our null hypothesis is more likely to be correct than our alternative hypothesis? Justify your choice.
+
+**Answer:**
+
+<br>
+
+
+17. (6 points) Describe a situation (other than one covered in class) where it would make sense to use a chi-squared test. What would the variables be and what would your hypotheses be?
+
+**Description:**
+
+**$H_0$:**
+
+**$H_a$:**
+
